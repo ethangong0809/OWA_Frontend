@@ -1,0 +1,62 @@
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Leaving Contact Forms</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>You are being redirected to another website.</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark button-close" (click)="c()">Cancel</button>
+    <button type="button" class="btn btn-outline-dark button-yes" (click)="redirect();c();">OK</button>
+  </div>
+</ng-template>
+
+<header class="s-header">
+  <div class="containers">
+    <div id="commonBanner">
+      <div>
+        <a tabindex="1" (click)="open(content,'https://www.virginia.gov/')" alt="The Official Site of The Commonwealth of Virginia"
+          title="Virginia.gov portal" class="virginiaLogo"></a>
+      </div>
+      <div class="alignLeft">
+        <a tabindex="2" (click)="open(content,'https://www.virginia.gov/agencies/#paging:currentPage=0|paging:number=10')"
+          alt="Commonwealth of Virginia" title="Virginia agency websites">Agencies |</a>
+        <a tabindex="3" (click)="open(content,'https://www.governor.virginia.gov/')" alt="Virginia Governor" title="Virginia Governor">Governor</a>
+      </div>
+
+
+      <div id="virginiaSearch" class="banner-space pull-right">
+        <a tabindex="4" (click)="open(content,'https://www.virginia.gov/search/#paging:currentPage=0|paging:number=10')"
+          alt="Search Virginia.Gov" title="Search Virginia.Gov">Search Virginia.Gov</a>
+      </div>
+      <div id="google_translate_element" class="translate pull-right">
+      </div>
+    </div>
+  </div>
+</header>
+
+<header class="DMAS">
+  <div class="containers flex-container nowrap">
+    <div class="pull-left">
+      <img src="assets/img/DMASLogo.png" id="DMASlogo" alt="Welcome to Department of Medical Assistance Services">
+    </div>
+    <div class="centers">
+      <h1 id="DMAStitle">Department of Medical Assistance Services</h1>
+    </div>
+  </div>
+</header>
+
+<nav class="mobileDMAS">
+  <ul>
+    <li>
+      <h3 align="center">
+        <strong>
+          <a id="mobileDMAStitle">Department of Medical Assistance Services</a>
+        </strong>
+      </h3>
+    </li>
+  </ul>
+</nav>

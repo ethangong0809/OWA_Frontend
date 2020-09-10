@@ -1,0 +1,30 @@
+<ng-template #content1 let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Leaving Contact Forms</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>You are being redirected to another website.</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark button-close" (click)="c()">Cancel</button>
+    <button type="button" class="btn btn-outline-dark button-yes" (click)="redirect();c();">OK</button>
+  </div>
+</ng-template>
+
+<!-- <div class="Banner">
+  <h6 class="disclaimer" align="justify"><b>You can find a lot of helpful
+      information on DMAS' website at <a [routerLink]="" (click)="open(content1,'http://www.dmas.virginia.gov')" id="url">
+        www.dmas.virginia.gov</a></b>
+  </h6>
+</div> -->
+<div class="tip">
+  <p class="tip-text" align="justify">
+    <i class="fa fa-lightbulb-o fa-lg" id="bulbIcon" aria-hidden="true"></i> Tip: You can find a lot of helpful
+    information related to Virginia Medicaid on DMAS' website at <a [routerLink]="" (click)="open(content1,'http://www.dmas.virginia.gov')" id="url">
+      www.dmas.virginia.gov</a> by using the search function in the top right hand of the page.
+     <!-- to find what you're looking for. -->
+  </p>
+</div>

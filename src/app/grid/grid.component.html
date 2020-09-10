@@ -1,0 +1,49 @@
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Information</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p><b>Coming Soon...</b></p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark button-close" (click)="c()">Close</button>
+  </div>
+</ng-template>
+
+<form class="p1">
+  <div>
+    <i class="fa fa-home" aria-hidden="true" style="font-size: 250%; padding-right: 5px; cursor: pointer;" title="Home"
+      routerLink='/home'></i>
+    <i style="font-size: 200%; cursor: pointer;" title="Back" (click)="clickArrow()" class="fa fa-arrow-left"
+      aria-hidden="true"></i>
+  </div>
+  <div class="p2">
+    <span id="gridHeading">
+      Please select the category that best describes your request:
+    </span>
+  </div>
+
+  <div class="categoryGrid">
+    <div class="categoryBG">
+      <div class="clearfix wrap">
+        <!--Column#1-->
+        <div class="col colGrid">
+          <div class="box boxCategory boxGroup1" routerLink="/media">Media Request</div>
+          <div class="box boxCategory" (click)="getMedallion('Medallion4')">Medallion 4.0</div>
+          <div class="box boxCategory" (click)="getProcurement('Procurement')">Procurements</div>
+          <div class="box boxCategory boxGroup1" routerLink="/reportproblem">Report a Problem</div>
+        </div>
+
+        <div class="col colGrid">
+          <div class="box boxCategory boxGroup3" routerLink="/electedofficial">Elected Official Request</div>
+          <div class="box boxCategory boxGroup2" (click)="getCCCPlus('CCCPlus')">Commonwealth Coordinated Care Plus</div>
+          <div class="box boxCategory boxGroup1" (click)="getGeneralRequest('General')">General Request</div>
+          <div class="boxDisabled boxCategory boxGroup2 boxGroup4" style="color: #cacaca; cursor: default;">Freedom of Information Act (FOIA)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

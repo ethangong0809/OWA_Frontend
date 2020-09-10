@@ -1,0 +1,1923 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '10px'
+   }"></ngx-loading>
+
+<form class="p1">
+  <div>
+    <i class="fa fa-home" aria-hidden="true" style="font-size: 250%; padding-right: 5px; cursor: pointer;" title="Home" routerLink='/home'></i>
+    <i style="font-size: 200%; cursor: pointer;" title="Back" (click)="clickArrow()" class="fa fa-arrow-left" aria-hidden="true"></i>
+  </div>
+  <div class="p2">
+    <span id="heading">
+      Report a Problem
+    </span>
+  </div>
+
+  <ng-template #content1 let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Leaving Contact Forms</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>You are being redirected to another website.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark button-close" (click)="c()">Cancel</button>
+      <button type="button" class="btn btn-outline-dark button-yes" (click)="redirect();c();">OK</button>
+    </div>
+  </ng-template>
+
+  <div class="p3">
+    <app-disclaimer></app-disclaimer>
+
+    <div class="form-row" id="head">
+      <div class="form-group col-md-8 col-sm-8" id="headText" *ngIf="showHeading1">
+        <legend>
+          <b>Information Requests (Step 1 of 2)</b>
+        </legend>
+      </div>
+      <div class="form-group col-md-8 col-sm-8" id="headText" *ngIf="showHeading2">
+        <legend>
+          <b>Information Requests (Step 2 of 2)</b>
+        </legend>
+      </div>
+      <div class="form-group col-md-4 col-sm-4" id="headText">
+        <label class="requiredText">
+          <font color="red">*</font>Required fields
+        </label>
+      </div>
+      <div class="form-group" id="headText">
+        <p id="info" align="justify">For enrollment questions or information, please visit
+          <a style="font-weight: bold" [routerLink]="" (click)="open(content1,'http://www.coverva.org/')">www.coverva.org</a>
+          or call
+          <a href="tel:18552428282" style="text-decoration: none; font-weight: bold">
+            1-855-242-8282 (Toll Free)</a>,
+          <a href="tel:18882211590" style="text-decoration: none; font-weight: bold">1-888-221-1590 (TDD)
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <div class="goback" *ngIf="noBack">
+      <button type="submit" class="btn submitButton bottom-space" (click)="noClick()">Back to Step 1
+      </button>
+    </div>
+
+    <form enctype="multipart/form-data" id="myForm" (ngSubmit)="saveReportProblemRequest()" #editPro="ngForm">
+      <div class="formBox" *ngIf="noMain">
+        <p id="info">
+          <b>What category best describes you?
+            <font color="red">*</font>
+          </b>
+        </p>
+        <div class="form-row" id="info">
+          <div class="form-group col-md-6 left-space">
+            <input type="radio" id="contactChoice2" ngModel name="contact5" (click)="selectFirst('Medicaid Member')" class="radio" value="Medicaid">
+            <p id="radioButtonText">Medicaid Member</p>
+          </div>
+          <div class="form-group col-md-6 left-space">
+            <input type="radio" id="contactChoice2" name="contact6" class="radio" (click)="selectSecond('Provider')" value="provider">
+            <p id="radioButtonText">Provider</p>
+          </div>
+        </div>
+
+        <div class="form-row" id="info">
+          <div class="form-group col-md-6 left-space">
+            <input type="radio" class="radio" (click)="selectThird('Assisting a Medicaid Member')" value="assisting">
+            <p id="radioButtonText">Assisting a Medicaid Member</p>
+          </div>
+          <div class="form-group col-md-6 left-space">
+            <form enctype="multipart/form-data" #editPro1="ngForm">
+              <div class="other">
+                <input type="radio" id="contactChoice2" name="contact8" class="radio" (click)="clickOther('Other')" value="Other">
+                <p id="radioButtonText">Other</p>
+              </div>
+              <div class="form-group col-md-10 otherText" *ngIf="showArea">
+                <textarea ngModel name="box" (keypress)="omit_special_char2($event,$event.target.value)" [(ngModel)]="report.categoryOther"
+                  class="otherTextarea" required></textarea>
+              </div>
+              <div class="nextButton">
+                <button type="button" class="btn submitButton" [disabled]="!editPro1.form.valid" *ngIf="HideBtn" (click)="selectFourth()">Next</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div *ngIf="showThird">
+        <div class="formBox" *ngIf="showFour">
+          <h4 id="requestorInfo">Requestor's Information</h4>
+          <div class="form-row">
+            <div class="form-group col-md-6" id="preferredText">
+              <label>Are you a resident of Virginia?
+                <font color="red">*</font>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="residencyChoice" ngModel name="residency" class="radio" [(ngModel)]="requestor.vaResident" (click)="saveResidency('Yes')"
+                value="Yes" required>
+              <p id="radioButtonText">Yes</p>
+            </div>
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="residencyChoice" ngModel name="residency" class="radio" [(ngModel)]="requestor.vaResident" (click)="saveResidency('No')"
+                value="No">
+              <p id="radioButtonText">No</p>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>What is your relationship to the Medicaid Member?
+              <font color="red">*</font>
+            </label>
+          </div>
+          <div class="form-row" id="info">
+            <div class="form-group col-md-3 left-space">
+              <input type="radio" id="contactChoice1" [(ngModel)]="report.relationship" ngModel name="contact1" (click)="showRelative('Relative')"
+                class="radio" value="Relative" required>
+              <p id="radioButtonText">Relative</p>
+            </div>
+            <div class="form-group col-md-3 left-space">
+              <input type="radio" id="contactChoice2" ngModel name="contact1" [(ngModel)]="report.relationship" (click)="showPwr('Power of Attorney Holder')"
+                class="radio" value="Power of Attorney Holder" required>
+              <p id="radioButtonText">Power of Attorney Holder</p>
+            </div>
+            <div class="form-group col-md-3 left-space">
+              <input type="radio" id="contactChoice2" (click)="shoeProv('Provider')" [(ngModel)]="report.relationship" ngModel name="contact1"
+                class="radio" value="Provider" required>
+              <p id="radioButtonText">Provider</p>
+            </div>
+          </div>
+
+          <div class="form-row" id="info">
+            <div class="form-group col-md-3 left-space">
+              <input type="radio" id="contactChoice1" [(ngModel)]="report.relationship" (click)="showAssistor('Assistor/Navigator')" ngModel
+                name="contact1" class="radio" value="Assistor/Navigator" required>
+              <p id="radioButtonText">Assistor/Navigator</p>
+            </div>
+            <div class="form-group col-md-3 left-space">
+              <input type="radio" id="contactChoice2" [(ngModel)]="report.relationship" (click)="showFriend('Friend')" ngModel name="contact1"
+                class="radio" value="Friend" required>
+              <p id="radioButtonText">Friend</p>
+            </div>
+            <div class="form-group col-md-6 left-space">
+              <div class="other">
+                <input type="radio" id="contactChoice2" name="contact1" class="radio" [(ngModel)]="report.relationship" (click)="showDescription('Other')"
+                  value="Other" required>
+                <p id="radioButtonText">Other</p>
+              </div>
+              <div class="form-group col-md-6 otherText" *ngIf="notshow">
+                <!-- <h6>
+                    <font color="red">*Required</font>
+                  </h6> -->
+                <textarea rows="2" name="otherTextarea" class="otherTextarea" id="otherRelationship" [(ngModel)]="report.relationshipOther"
+                  required></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="form-row" *ngIf="attachBox" >
+            <div class="form-group col-md" style="display:inline-grid">
+              <label>Please attach your Power of Attorney document
+                <font color="red">*</font> (3 documents maximum)
+              </label>
+              <div class="form-group col-md-9" style="white-space:nowrap;display:inline-flex">
+                <label style="margin-left: -15px">Document Name
+                  <font color="red">*</font>
+                </label>&nbsp;&nbsp;
+                <input class="form-control" type="text" placeholder="Document Name" [(ngModel)]="documentName1" name="documentName1" required>&nbsp;
+                <input type="file" class="from-group" #myInput name="filename" (change)="selectFile1($event)" accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint"
+                multiple required>
+                <i class="fa fa-plus" aria-hidden="true" style="font-size: 140%" (click)="addDoc()" *ngIf="hidePlus"></i>
+              </div>
+              <div class="form-group col-md-9" style="white-space:nowrap;display:inline-flex" *ngIf="doc2">
+                <label style="margin-left: -15px">Document Name
+                  <font color="red">*</font>
+                </label>&nbsp;&nbsp;
+                <input class="form-control" type="text" placeholder="Document Name" [(ngModel)]="documentName2" name="documentName2" required>&nbsp;
+                <input type="file" class="from-group" #myInput name="filename" (change)="selectFile2($event)" accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint"
+                multiple required>
+                <i class="fa fa-minus" aria-hidden="true" style="font-size: 140%" (click)="hideDoc2()"></i>
+              </div>
+              <div class="form-group col-md-9" style="white-space:nowrap;display:inline-flex" *ngIf="doc3">
+                <label style="margin-left: -15px">Document Name
+                  <font color="red">*</font>
+                </label>&nbsp;&nbsp;
+                <input class="form-control" type="text" placeholder="Document Name" [(ngModel)]="documentName3" name="documentName3" required>&nbsp;
+                <input type="file" class="from-group" #myInput name="filename" (change)="selectFile3($event)" accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint"
+                multiple required>
+                <i class="fa fa-minus" aria-hidden="true" style="font-size: 140%" (click)="hideDoc3()"></i>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Requestor's First Name
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" [(ngModel)]="requestor.firstName" #nameUser3="ngModel" autocomplete="off" type="text" placeholder="Requestor's First Name"
+                (keypress)="omit_special_char($event,$event.target.value)" ngModel name="usrnm3" required>
+              <div *ngIf="nameUser3.touched" style="color:red">
+                <div *ngIf="nameUser3.errors?.required">
+                  First Name is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Requestor's Last Name
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" [(ngModel)]="requestor.lastName" type="text" autocomplete="off" #nameUser11="ngModel" placeholder="Requestor's Last Name"
+                (keypress)="omit_special_char($event,$event.target.value)" ngModel name="lname" required>
+              <div *ngIf="nameUser11.touched" style="color:red">
+                <div *ngIf="nameUser11.errors?.required">
+                  Last Name is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6 col-lg-4">
+              <label>Requestor's Phone
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" type="text" [textMask]="{mask:mask}" (change)="getNumber($event.target.value)" #contactUser="ngModel"
+                autocomplete="off" OnlyNumber="true" pattern="^(\+\d{1})?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$" maxlength="17"
+                placeholder="Requestor's Phone" [appAutoTab]="tap" ngModel name="phone20" required>
+              <div *ngIf="contactUser.touched" style="color:red">
+                <div *ngIf="contactUser.errors?.required">
+                  Phone Number is required
+                </div>
+              </div>
+              <div *ngIf="contactUser.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="contactUser.errors?.pattern">
+                  Please enter 10 digit phone number. Example: (123)-456-7890
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6 col-lg-4">
+              <label>Requestor's Email
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" type="email" (keypress)="omit_special_char2($event,$event.target.value)" [(ngModel)]="requestor.email"
+                ngModel name="emailUser" id="emailini" #emailUser="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                #tap autocomplete="off" type="email" placeholder="Requestor's Email" required>
+              <div *ngIf="emailUser.touched" style="color:red">
+                <div *ngIf="emailUser.errors?.required">
+                  Email is required
+                </div>
+              </div>
+              <div *ngIf="emailUser.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="emailUser.errors?.pattern">
+                  Please type your email address in the format: example@email.xyz
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6 col-lg-4">
+              <label>Confirm Requestor's Email
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" (keypress)="omit_special_char2($event,$event.target.value)" onpaste="return false" [(ngModel)]="requestor.confirmEmail"
+                type="email" id="confemail" autocomplete="off" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" #emailUser11="ngModel"
+                ngModel name="emailUser11" placeholder="Confirm Requestor's Email" compare="emailUser" required>
+              <div *ngIf="emailUser11.touched" style="color:red">
+                <div *ngIf="emailUser11.errors?.required">
+                  Email is required
+                </div>
+              </div>
+              <div *ngIf="emailUser11?.invalid && (emailUser11?.dirty || emailUser11?.touched)" style="color:red">
+                <div *ngIf="emailUser11.errors['compare']">Email does not match</div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- <div class="form-row">
+            <div class="form-group col-md-6" id="preferredText">
+              <label>Preferred method of communication</label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="contactChoice1" name="contact" (click)="showPhone('Phone')" class="radio"
+                [(ngModel)]="requestor.preferredContact" value="Phone">
+              <p id="radioButtonText">Phone</p>
+            </div>
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="contactChoice1" name="contact" class="radio" (click)="showEmail('Email')"
+                [(ngModel)]="requestor.preferredContact" value="Email">
+              <p id="radioButtonText">Email</p>
+            </div>
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="contactChoice1" name="contact" class="radio" (click)="showBoth('Phone and Email')"
+                [(ngModel)]="requestor.preferredContact" value="Phone and Email">
+              <p id="radioButtonText">Both</p>
+            </div>
+          </div> -->
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Organization Name</label>
+              <input class="form-control" [(ngModel)]="requestor.organizationName" (change)="getOrganization($event.target.value)" (keypress)="omit_special_char($event,$event.target.value)"
+                type="text" placeholder="Organization Name" name="Organ1">
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Fax Number</label>
+              <input class="form-control" type="text" #contact3="ngModel" (change)="getNumber4($event.target.value)" OnlyNumber="true"
+                pattern="^(\+\d{1})?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$" maxlength="17" [textMask]="{mask:mask}" placeholder="Fax Number"
+                ngModel name="fax2">
+              <div *ngIf="contact3.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="contact3.errors?.pattern">
+                  Please enter 10 digit fax number. Example: (123)-456-7890
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Mailing address 1</label>
+              <input class="form-control" #address1QWE="ngModel" (change)="check_mailing1($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                (keypress)="omit_special_char2($event,$event.target.value)" (change)="getAdd1($event.target.value)" [(ngModel)]="requestor.address1"
+                type="text" placeholder="Street address, P.O box, company name, c/o" name="address1QWE">
+              <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                <div *ngIf="address1QWE.errors?.requiredIf">
+                  address1 is required
+                </div>
+              </div>
+
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Mailing address 2</label>
+              <input class="form-control" (change)="check_mailing2($event.target.value)" type="text" (keypress)="omit_special_char2($event,$event.target.value)"
+                (change)="getAdd2($event.target.value)" [(ngModel)]="requestor.address2" placeholder="Apartment, suite, unit, building, floor, etc"
+                name="address2QWE">
+
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>City</label>
+              <input class="form-control" #cityQWE="ngModel" (change)="check_city($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                (keypress)="omit_special_char($event,$event.target.value)" (change)="getCity($event.target.value)" [(ngModel)]="requestor.city"
+                type="text" placeholder="City" name="cityQWE">
+              <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                <div *ngIf="cityQWE.errors?.requiredIf">
+                  city is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>State</label>
+              <select id="inputState4" #stateQWE="ngModel" (change)="check_state($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                [(ngModel)]="requestor.state" name="state01" class="form-control">
+                <option [ngValue]="undefined" selected>Choose...</option>
+                <option value="AL">Alabama</option>
+                <option value="AK">Alaska</option>
+                <option value="AZ">Arizona</option>
+                <option value="AR">Arkansas</option>
+                <option value="CA">California</option>
+                <option value="CO">Colorado</option>
+                <option value="CT">Connecticut</option>
+                <option value="DE">Delaware</option>
+                <option value="DC">District Of Columbia</option>
+                <option value="FL">Florida</option>
+                <option value="GA">Georgia</option>
+                <option value="HI">Hawaii</option>
+                <option value="ID">Idaho</option>
+                <option value="IL">Illinois</option>
+                <option value="IN">Indiana</option>
+                <option value="IA">Iowa</option>
+                <option value="KS">Kansas</option>
+                <option value="KY">Kentucky</option>
+                <option value="LA">Louisiana</option>
+                <option value="ME">Maine</option>
+                <option value="MD">Maryland</option>
+                <option value="MA">Massachusetts</option>
+                <option value="MI">Michigan</option>
+                <option value="MN">Minnesota</option>
+                <option value="MS">Mississippi</option>
+                <option value="MO">Missouri</option>
+                <option value="MT">Montana</option>
+                <option value="NE">Nebraska</option>
+                <option value="NV">Nevada</option>
+                <option value="NH">New Hampshire</option>
+                <option value="NJ">New Jersey</option>
+                <option value="NM">New Mexico</option>
+                <option value="NY">New York</option>
+                <option value="NC">North Carolina</option>
+                <option value="ND">North Dakota</option>
+                <option value="OH">Ohio</option>
+                <option value="OK">Oklahoma</option>
+                <option value="OR">Oregon</option>
+                <option value="PA">Pennsylvania</option>
+                <option value="RI">Rhode Island</option>
+                <option value="SC">South Carolina</option>
+                <option value="SD">South Dakota</option>
+                <option value="TN">Tennessee</option>
+                <option value="TX">Texas</option>
+                <option value="UT">Utah</option>
+                <option value="VT">Vermont</option>
+                <option value="VA">Virginia</option>
+                <option value="WA">Washington</option>
+                <option value="WV">West Virginia</option>
+                <option value="WI">Wisconsin</option>
+                <option value="WY">Wyoming</option>
+              </select>
+              <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                <div *ngIf="stateQWE.errors?.requiredIf">
+                  state is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Zip Code</label>
+              <input class="form-control" #zip3QWE="ngModel" (change)="check_zip($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                OnlyNumber="true" (change)="getZip($event.target.value)" [(ngModel)]="requestor.zipcode" type="text" placeholder="Zip Code"
+                minlength="5" maxlength="5" pattern="(\d{5}([\-]\d{4})?)" name="zip3QWE">
+              <div style="color:red" *ngIf="zip3QWE.errors?.pattern">
+                zip code is invalid
+              </div>
+              <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                <div *ngIf="zip3QWE.errors?.requiredIf">
+                  zip code is required
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 1st -->
+        <div class="formBox bottom-space" *ngIf="showOne">
+          <label>To help us better identify a member, please provide the following information:</label>
+          <div class="form-row">
+            <div class="form-group col-md-6" id="preferredText">
+              <label>Are you a resident of Virginia?
+                <font color="red">*</font>
+              </label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="residencyChoice" ngModel name="residency" class="radio" [(ngModel)]="requestor.vaResident" (click)="saveResidency('Yes')"
+                value="Yes" required>
+              <p id="radioButtonText">Yes</p>
+            </div>
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="residencyChoice" ngModel name="residency" class="radio" [(ngModel)]="requestor.vaResident" (click)="saveResidency('No')"
+                value="No">
+              <p id="radioButtonText">No</p>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Medicaid Member's First Name
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" [(ngModel)]="report.memFirstname" type="text" #nameUser2="ngModel" autocomplete="off" placeholder="Medicaid Member's First Name"
+                (keypress)="omit_special_char($event,$event.target.value)" ngModel name="fname1" required>
+              <div *ngIf="nameUser2.touched" style="color:red">
+                <div *ngIf="nameUser2.errors?.required">
+                  First Name is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Medicaid Member's Last Name
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" [(ngModel)]="report.memLastname" type="text" #nameUser7="ngModel" autocomplete="off" placeholder="Medicaid Member's Last Name"
+                (keypress)="omit_special_char($event,$event.target.value)" ngModel name="lname16" required>
+              <div *ngIf="nameUser7.touched" style="color:red">
+                <div *ngIf="nameUser7.errors?.required">
+                  Last Name is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6 col-xl-4">
+              <label>Medicaid Member's Phone Number
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" [textMask]="{mask:mask}" #contactUser1="ngModel" type="text" maxlength="17" (change)="getNumber1($event.target.value)"
+                placeholder="Medicaid Member's Phone Number" OnlyNumber="true" pattern="^(\+\d{1})?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$"
+                [appAutoTab]="tap" ngModel name="phone89" required>
+              <div *ngIf="contactUser1.touched" style="color:red">
+                <div *ngIf="contactUser1.errors?.required">
+                  Phone Number is required
+                </div>
+              </div>
+              <div *ngIf="contactUser1.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="contactUser1.errors?.pattern">
+                  Please enter 10 digit phone number. Example: (123)-456-7890
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6 col-xl-4">
+              <label>Medicaid Member's Email
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" (keypress)="omit_special_char2($event,$event.target.value)"
+                [(ngModel)]="report.memEmail" type="text" #emailUser4="ngModel" id="emailini" placeholder="Medicaid Member's Email"
+                ngModel name="emailUser4" #tap required>
+              <div *ngIf="emailUser4.touched" style="color:red">
+                <div *ngIf="emailUser4.errors?.required">
+                  Email is required
+                </div>
+              </div>
+              <div *ngIf="emailUser4.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="emailUser4.errors?.pattern">
+                  Please type your email address in the format: example@email.xyz
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6 col-xl-4">
+              <label>Confirm Medicaid Member's Email
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" onpaste="return false" (keypress)="omit_special_char2($event,$event.target.value)" [(ngModel)]="report.confirmMemEmail"
+                type="text" #emailUser2="ngModel" id="confemail" autocomplete="off" placeholder="Confirm Medicaid Member's Email"
+                compare="emailUser4" ngModel name="emailUser2" required>
+              <div *ngIf="emailUser2.touched" style="color:red">
+                <div *ngIf="emailUser2.errors?.required">
+                  Email is required
+                </div>
+              </div>
+              <div *ngIf="emailUser2?.invalid && (emailUser2?.dirty || emailUser2?.touched)" style="color:red">
+                <div *ngIf="emailUser2.errors['compare']">Email does not match</div>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="form-row">
+            <div class="form-group col-md-6" id="preferredText">
+              <label>Preferred method of communication</label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="contactChoice1" name="contact" (click)="showPhone('Phone')" class="radio"
+                [(ngModel)]="requestor.preferredContact" value="Phone">
+              <p id="radioButtonText">Phone</p>
+            </div>
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="contactChoice1" name="contact" class="radio" (click)="showEmail('Email')"
+                [(ngModel)]="requestor.preferredContact" value="Email">
+              <p id="radioButtonText">Email</p>
+            </div>
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="contactChoice1" name="contact" class="radio" (click)="showBoth('Phone and Email')"
+                [(ngModel)]="requestor.preferredContact" value="Phone and Email">
+              <p id="radioButtonText">Both</p>
+            </div>
+          </div> -->
+
+          <div *ngIf="showMedicaid">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Mailing address 1
+                  <font color="red">*</font>
+                </label>
+                <input [(ngModel)]="requestor.address1" #address1="ngModel" (change)="check_mailing1($event.target.value)" (keypress)="omit_special_char2($event,$event.target.value)"
+                  class="form-control" type="text" placeholder="Street address, P.O box, company name, c/o" name="address1"
+                  required>
+                <div *ngIf="address1.touched" style="color:red">
+                  <div *ngIf="address1.errors?.required">
+                    Address 1 is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>Mailing address 2</label>
+                <input class="form-control" (keypress)="omit_special_char2($event,$event.target.value)" (change)="check_mailing2($event.target.value)"
+                  [(ngModel)]="requestor.address2" (change)="getAdd2($event.target.value)" type="text" placeholder="Apartment, suite, unit, building, floor, etc"
+                  name="address2">
+
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>City
+                  <font color="red">*</font>
+                </label>
+                <input class="form-control" #city="ngModel" (change)="check_city($event.target.value)" (keypress)="omit_special_char($event,$event.target.value)"
+                  [(ngModel)]="requestor.city" type="text" placeholder="City" name="city" required>
+                <div *ngIf="city.touched" style="color:red">
+                  <div *ngIf="city.errors?.required">
+                    City is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>State
+                  <font color="red">*</font>
+                </label>
+                <select id="inputState5" #state="ngModel" (change)="check_state($event.target.value)" [(ngModel)]="requestor.state" name="state08"
+                  class="form-control" required>
+                  <option [ngValue]="undefined" selected>Choose...</option>
+                  <option value="AL">Alabama</option>
+                  <option value="AK">Alaska</option>
+                  <option value="AZ">Arizona</option>
+                  <option value="AR">Arkansas</option>
+                  <option value="CA">California</option>
+                  <option value="CO">Colorado</option>
+                  <option value="CT">Connecticut</option>
+                  <option value="DE">Delaware</option>
+                  <option value="DC">District Of Columbia</option>
+                  <option value="FL">Florida</option>
+                  <option value="GA">Georgia</option>
+                  <option value="HI">Hawaii</option>
+                  <option value="ID">Idaho</option>
+                  <option value="IL">Illinois</option>
+                  <option value="IN">Indiana</option>
+                  <option value="IA">Iowa</option>
+                  <option value="KS">Kansas</option>
+                  <option value="KY">Kentucky</option>
+                  <option value="LA">Louisiana</option>
+                  <option value="ME">Maine</option>
+                  <option value="MD">Maryland</option>
+                  <option value="MA">Massachusetts</option>
+                  <option value="MI">Michigan</option>
+                  <option value="MN">Minnesota</option>
+                  <option value="MS">Mississippi</option>
+                  <option value="MO">Missouri</option>
+                  <option value="MT">Montana</option>
+                  <option value="NE">Nebraska</option>
+                  <option value="NV">Nevada</option>
+                  <option value="NH">New Hampshire</option>
+                  <option value="NJ">New Jersey</option>
+                  <option value="NM">New Mexico</option>
+                  <option value="NY">New York</option>
+                  <option value="NC">North Carolina</option>
+                  <option value="ND">North Dakota</option>
+                  <option value="OH">Ohio</option>
+                  <option value="OK">Oklahoma</option>
+                  <option value="OR">Oregon</option>
+                  <option value="PA">Pennsylvania</option>
+                  <option value="RI">Rhode Island</option>
+                  <option value="SC">South Carolina</option>
+                  <option value="SD">South Dakota</option>
+                  <option value="TN">Tennessee</option>
+                  <option value="TX">Texas</option>
+                  <option value="UT">Utah</option>
+                  <option value="VT">Vermont</option>
+                  <option value="VA">Virginia</option>
+                  <option value="WA">Washington</option>
+                  <option value="WV">West Virginia</option>
+                  <option value="WI">Wisconsin</option>
+                  <option value="WY">Wyoming</option>
+                </select>
+                <div *ngIf="state.touched" style="color:red">
+                  <div *ngIf="state.errors?.required">
+                    State is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Zip Code
+                  <font color="red">*</font>
+                </label>
+                <input class="form-control" (change)="check_state($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                  (change)="getZip($event.target.value)" type="tel" #zip5="ngModel" OnlyNumber="true" [(ngModel)]="requestor.zipcode"
+                  placeholder="Zip Code" pattern="(\d{5}([\-]\d{4})?)" minlength="5" maxlength="5" ngModel name="zip5" required>
+                <div style="color:red" *ngIf="zip5.errors?.pattern">
+                  Zip code is invalid
+                </div>
+                <div *ngIf="zip5.touched" style="color:red">
+                  <div *ngIf="zip5.errors?.required">
+                    Zip code is required
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <div id="medicaidTextbox">
+                <h6 class="textBanner" align="justify">
+                  <i class="fa fa-info-circle" id="infoIcon" aria-hidden="true"></i>
+                  <b>If you do not know the Medicaid Member Number, the Social Security Number can help us locate records. If
+                    you have entered a correct Medicaid Member Number, there is no need to enter the Social Security Number.
+                  </b>
+                </h6>
+              </div>
+            </div>
+
+            <!-- <div class="form-group col-md-5 col-xl-4"> -->
+            <div class="form-group col-md-6">
+              <label>Medicaid Member's ID Number</label>
+              <input class="form-control" type="text" (keypress)="omit_special_char($event,$event.target.value)" minlength="12" maxlength="12"
+                #mId="ngModel" (change)="getMedicaidID($event.target.value)" placeholder="Medicaid Member's ID Number" ngModel
+                name="mId">
+              <div style="color:red" [hidden]="mId.valid || mId.pristine">
+                Constituent's Medicaid ID Number is invalid
+              </div>
+            </div>
+            <!-- (keydown.space)="$event.preventDefault()" -->
+            <!-- <div class="form-group col-md-2 col-xl-4" align="center">
+              <label>(OR)</label>
+            </div> -->
+
+            <!-- <div class="form-group col-md-5 col-xl-4"> -->
+            <div class="form-group col-md-6">
+              <label>Medicaid Member's Social Security Number</label>
+              <input class="form-control" type="text" [textMask]="{mask:mask1}" (keypress)="omit_special_char($event,$event.target.value)"
+                #ssn1="ngModel" pattern="^\d{3}-?\d{2}-?\d{4}$" (change)="getNumber2($event.target.value)" placeholder="Medicaid Member's Social Security Number"
+                ngModel name="ssn1">
+              <div *ngIf="ssn1.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="ssn1.errors?.pattern">
+                  Medicaid Member's Social Security Number is invalid
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <!-- <div class="form-group col-md-5 col-xl-4"> -->
+            <div class="form-group col-md-6">
+              <label>Medicaid Member's Date of Birth
+                <font color="red">*</font>
+              </label>
+              <my-date-picker name="date" placeholder="mm/dd/yyyy" (dateChanged)="getStartDate($event)" [options]="myDatePickerOptions"
+                #dob1="ngModel" ngModel name="dob1" required></my-date-picker>
+              <div *ngIf="dob1.touched" style="color:red">
+                <div *ngIf="dob1.errors?.required">
+                  Medicaid Member's Date of Birth is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row" id="description">
+            <label for="number">Briefly describe the problem you are reporting
+              <font color="red">*</font>
+            </label>
+            <textarea cols="156" rows="7" id="summernote" [(ngModel)]="report.description" ngModel name="purpose4" [ngxSummernote]="config"
+              required></textarea>
+          </div>
+        </div>
+        <!-- 2nd -->
+        <div class="formBox top-space bottom-space" *ngIf="showTwo">
+          <label>To help us better identify a member, please provide the following information:</label>
+          <!-- Second section -->
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Medicaid Member's First Name
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" type="text" #nameUser6="ngModel" [(ngModel)]="report.memFirstname" autocomplete="off" placeholder="Medicaid Member's First Name"
+                (keypress)="omit_special_char($event,$event.target.value)" ngModel name="fname2" required>
+              <div *ngIf="nameUser6.touched" style="color:red">
+                <div *ngIf="nameUser6.errors?.required">
+                  First Name is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Medicaid Member's Last Name
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" type="text" [(ngModel)]="report.memLastname" #nameUser33="ngModel" autocomplete="off" placeholder="Medicaid Member's Last Name"
+                (keypress)="omit_special_char($event,$event.target.value)" ngModel name="lname1" required>
+              <div *ngIf="nameUser33.touched" style="color:red">
+                <div *ngIf="nameUser33.errors?.required">
+                  Last Name is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6 col-xl-4">
+              <label>Medicaid Member's Phone Number</label>
+              <input class="form-control" [appAutoTab]="tap" maxlength="17" [textMask]="{mask:mask}" OnlyNumber="true" pattern="^(\+\d{1})?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$"
+                #contactUser2="ngModel" type="text" (change)="getNumber1($event.target.value)" placeholder="Medicaid Member's Phone Number"
+                ngModel name="contactUser2">
+
+              <div *ngIf="contactUser2.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="contactUser2.errors?.pattern">
+                  Please enter 10 digit phone number. Example: (123)-456-7890
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6 col-xl-4">
+              <label>Medicaid Member's Email</label>
+              <input class="form-control" type="email" #tap [(ngModel)]="report.memEmail" #emailUser119="ngModel" id="emailini1" placeholder="Medicaid Member's Email"
+                pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" ngModel name="emailUser119">
+
+
+              <div *ngIf="emailUser119.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="emailUser119.errors?.pattern">
+                  Please type your email address in the format: example@email.xyz
+                </div>
+              </div>
+
+            </div>
+
+            <div class="form-group col-md-6 col-xl-4">
+              <label>Confirm Medicaid Member's Email</label>
+              <input class="form-control" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" onpaste="return false" [(ngModel)]="report.confirmEmail"
+                type="email" #emailUse2="ngModel" id="confemail1" autocomplete="off" placeholder="Confirm Medicaid Member's Email"
+                compare="emailUser119" ngModel name="emailUse2">
+              <div *ngIf="emailUse2?.invalid && (emailUse2?.dirty || emailUse2?.touched)" style="color:red">
+                <div *ngIf="emailUse2.errors['compare']">Email does not match</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <div id="medicaidTextbox">
+                <h6 class="textBanner" align="justify">
+                  <i class="fa fa-info-circle" id="infoIcon" aria-hidden="true"></i>
+                  <b>If you do not know the Medicaid Member Number, the Social Security Number can help us locate records. If
+                    you have entered a correct Medicaid Member Number, there is no need to enter the Social Security Number.
+                  </b>
+                </h6>
+              </div>
+            </div>
+
+            <!-- <div class="form-group col-md-5 col-xl-4"> -->
+            <div class="form-group col-md-6">
+              <label>Medicaid Member's ID Number</label>
+              <input class="form-control" type="text" (change)="getMedicaidID($event.target.value)" placeholder="Medicaid Member's ID Number"
+                (keypress)="omit_special_char($event,$event.target.value)" minlength="12" maxlength="12" #mId1="ngModel" ngModel
+                name="mId1">
+              <div *ngIf="mId1.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="mId1.errors?.minlength">
+                  Medicaid Member's ID Number is invalid
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="form-group col-md-2 col-xl-4" align="center">
+              <label>(OR)</label>
+            </div> -->
+
+            <!-- <div class="form-group col-md-5 col-xl-4"> -->
+            <div class="form-group col-md-6">
+              <label>Medicaid Member's Social Security Number</label>
+              <input class="form-control" OnlyNumber="true" [textMask]="{mask:mask1}" type="text" (keypress)="omit_special_char($event,$event.target.value)"
+                (change)="getNumber2($event.target.value)" placeholder="Medicaid Member's Social Security Number" pattern="^\d{3}-?\d{2}-?\d{4}$"
+                #ssn="ngModel" ngModel name="ssn">
+              <div *ngIf="ssn.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="ssn.errors?.pattern">
+                  Medicaid Member's Social Security Number is invalid
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <!-- <div class="form-group col-md-5 col-xl-4"> -->
+            <div class="form-group col-md-6">
+              <label>Medicaid Member's Date of Birth
+                <font color="red">*</font>
+              </label>
+              <my-date-picker name="date" placeholder="mm/dd/yyyy" (dateChanged)="getStartDate($event)" [options]="myDatePickerOptions"
+                #dob2="ngModel" ngModel name="dob2" required></my-date-picker>
+              <div *ngIf="dob2.touched" style="color:red">
+                <div *ngIf="dob2.errors?.required">
+                  Medicaid Member's Date of Birth is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Medicaid Member's mailing address 1
+                <font color="red">*</font>
+              </label>
+              <input [(ngModel)]="report.memAddr1" #address1EWQ="ngModel" (keypress)="omit_special_char2($event,$event.target.value)"
+                class="form-control" type="text" placeholder="Street address, P.O box, company name, c/o" name="memAddr1" required>
+              <div *ngIf="address1EWQ.touched" style="color:red">
+                <div *ngIf="address1EWQ.errors?.required">
+                  Medicaid Member's mailing address 1 is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Medicaid Member's mailing address 2 </label>
+              <input class="form-control" (keypress)="omit_special_char2($event,$event.target.value)"
+                [(ngModel)]="report.memAddr2" (change)="getAdd2($event.target.value)" type="text" placeholder="Apartment, suite, unit, building, floor, etc"
+                name="memAddr2">
+
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>City
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" #memCity="ngModel" (keypress)="omit_special_char($event,$event.target.value)"
+                [(ngModel)]="report.memCity" type="text" placeholder="City" name="memCity" required>
+              <div *ngIf="memCity.touched" style="color:red">
+                <div *ngIf="memCity.errors?.required">
+                  City is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>State
+                <font color="red">*</font>
+              </label>
+              <select id="inputState5" #memState="ngModel" [(ngModel)]="report.memState" name="memState"
+                class="form-control" required>
+                <option [ngValue]="undefined" selected>Choose...</option>
+                <option value="AL">Alabama</option>
+                <option value="AK">Alaska</option>
+                <option value="AZ">Arizona</option>
+                <option value="AR">Arkansas</option>
+                <option value="CA">California</option>
+                <option value="CO">Colorado</option>
+                <option value="CT">Connecticut</option>
+                <option value="DE">Delaware</option>
+                <option value="DC">District Of Columbia</option>
+                <option value="FL">Florida</option>
+                <option value="GA">Georgia</option>
+                <option value="HI">Hawaii</option>
+                <option value="ID">Idaho</option>
+                <option value="IL">Illinois</option>
+                <option value="IN">Indiana</option>
+                <option value="IA">Iowa</option>
+                <option value="KS">Kansas</option>
+                <option value="KY">Kentucky</option>
+                <option value="LA">Louisiana</option>
+                <option value="ME">Maine</option>
+                <option value="MD">Maryland</option>
+                <option value="MA">Massachusetts</option>
+                <option value="MI">Michigan</option>
+                <option value="MN">Minnesota</option>
+                <option value="MS">Mississippi</option>
+                <option value="MO">Missouri</option>
+                <option value="MT">Montana</option>
+                <option value="NE">Nebraska</option>
+                <option value="NV">Nevada</option>
+                <option value="NH">New Hampshire</option>
+                <option value="NJ">New Jersey</option>
+                <option value="NM">New Mexico</option>
+                <option value="NY">New York</option>
+                <option value="NC">North Carolina</option>
+                <option value="ND">North Dakota</option>
+                <option value="OH">Ohio</option>
+                <option value="OK">Oklahoma</option>
+                <option value="OR">Oregon</option>
+                <option value="PA">Pennsylvania</option>
+                <option value="RI">Rhode Island</option>
+                <option value="SC">South Carolina</option>
+                <option value="SD">South Dakota</option>
+                <option value="TN">Tennessee</option>
+                <option value="TX">Texas</option>
+                <option value="UT">Utah</option>
+                <option value="VT">Vermont</option>
+                <option value="VA">Virginia</option>
+                <option value="WA">Washington</option>
+                <option value="WV">West Virginia</option>
+                <option value="WI">Wisconsin</option>
+                <option value="WY">Wyoming</option>
+              </select>
+              <div *ngIf="memState.touched" style="color:red">
+                <div *ngIf="memState.errors?.required">
+                  State is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Zip Code
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                (change)="getZip($event.target.value)" type="tel" #memZipcode="ngModel" OnlyNumber="true" [(ngModel)]="report.memZipcode"
+                placeholder="Zip Code" pattern="(\d{5}([\-]\d{4})?)" minlength="5" maxlength="5" ngModel name="memZipcode" required>
+              <div style="color:red" *ngIf="memZipcode.errors?.pattern">
+                Zip code is invalid
+              </div>
+              <div *ngIf="memZipcode.touched" style="color:red">
+                <div *ngIf="memZipcode.errors?.required">
+                  Zip code is required
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="form-row" id="description">
+            <label for="number">Briefly describe the problem you are reporting
+              <font color="red">*</font>
+            </label>
+            <textarea cols="156" rows="7" id="summernote" [(ngModel)]="report.description" ngModel name="purpose2" [ngxSummernote]="config"
+              required></textarea>
+          </div>
+        </div>
+      </div>
+
+      <form *ngIf="hideThird">
+        <div class="form-row" id="orgRequest">
+          <div class="form-group col-md-7 col-lg-6 col-xl-5" id="orgRequestText">
+            <label>Is your request on behalf of an organization?
+              <font color="red">*</font>
+            </label>
+          </div>
+          <div class="form-group col-md-2 left-space">
+            <input type="radio" (click)="showYes('Organization')" id="contactChoice2" ngModel name="contact" class="radio" value="Organization"
+              required>
+            <p id="radioButtonText">Yes</p>
+          </div>
+          <div class="form-group col-md-2 left-space">
+            <input type="radio" id="contactChoice2" name="contact" class="radio" (click)="showNo('Individual')" value="Individual">
+            <p id="radioButtonText">No</p>
+          </div>
+        </div>
+      </form>
+
+      <div *ngIf="showSecond">
+        <div class="formBox">
+          <h4 id="requestorInfo">Requestor's Information</h4>
+          <div class="form-row">
+            <div class="form-group col-md-6" id="preferredText">
+              <label>Are you a resident of Virginia?
+                <font color="red">*</font>
+              </label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="residencyChoice" ngModel name="residency" class="radio" [(ngModel)]="requestor.vaResident" (click)="saveResidency('Yes')"
+                value="Yes" required>
+              <p id="radioButtonText">Yes</p>
+            </div>
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="residencyChoice" ngModel name="residency" class="radio" [(ngModel)]="requestor.vaResident" (click)="saveResidency('No')"
+                value="No">
+              <p id="radioButtonText">No</p>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Requestor's First Name
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" [(ngModel)]="requestor.firstName" #nameUser="ngModel" autocomplete="off" type="text" placeholder="Requestor's First Name"
+                (keypress)="omit_special_char($event,$event.target.value)" ngModel name="usrnm22" required>
+              <div *ngIf="nameUser.touched" style="color:red">
+                <div *ngIf="nameUser.errors?.required">
+                  First Name is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Requestor's Last Name
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" [(ngModel)]="requestor.lastName" type="text" autocomplete="off" #nameUser1="ngModel" placeholder="Requestor's Last Name"
+                (keypress)="omit_special_char($event,$event.target.value)" ngModel name="lname9" required>
+              <div *ngIf="nameUser1.touched" style="color:red">
+                <div *ngIf="nameUser1.errors?.required">
+                  Last Name is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6 col-lg-4">
+              <label>Requestor's Phone
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" type="text" maxlength="17" (change)="getNumber($event.target.value)" [textMask]="{mask:mask}"
+                #contactUser="ngModel" autocomplete="off" placeholder="Requestor's Phone" OnlyNumber="true" [appAutoTab]="tap"
+                pattern="^(\+\d{1})?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$" ngModel name="phone22" required>
+              <div *ngIf="contactUser.touched" style="color:red">
+                <div *ngIf="contactUser.errors?.required">
+                  Phone Number is required
+                </div>
+              </div>
+              <div *ngIf="contactUser.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="contactUser.errors?.pattern">
+                  Please enter 10 digit phone number. Example: (123)-456-7890
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6 col-lg-4">
+              <label>Requestor's Email
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" type="email" (keypress)="omit_special_char2($event,$event.target.value)" [(ngModel)]="requestor.email"
+                ngModel name="emailUser" id="emailini" #emailUser="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                autocomplete="off" type="email" placeholder="Requestor's Email" #tap required>
+              <div *ngIf="emailUser.touched" style="color:red">
+                <div *ngIf="emailUser.errors?.required">
+                  Email is required
+                </div>
+              </div>
+              <div *ngIf="emailUser.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="emailUser.errors?.pattern">
+                  Please type your email address in the format: example@email.xyz
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6 col-lg-4">
+              <label>Confirm Requestor's Email
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" (keypress)="omit_special_char2($event,$event.target.value)" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                onpaste="return false" type="email" [(ngModel)]="requestor.confirmEmail" id="confemail" autocomplete="off"
+                #emailUser133="ngModel" ngModel name="emailUser133" placeholder="Confirm Requestor's Email" compare="emailUser"
+                required>
+              <div *ngIf="emailUser133.touched" style="color:red">
+                <div *ngIf="emailUser133.errors?.required">
+                  Email is required
+                </div>
+              </div>
+              <div *ngIf="emailUser133?.invalid && (emailUser133?.dirty || emailUser133?.touched)" style="color:red">
+                <div *ngIf="emailUser133.errors['compare']">Email does not match</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="form-row">
+            <div class="form-group col-md-6" id="preferredText">
+              <label>Preferred method of communication</label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="contactChoice1" name="contact" (click)="showPhone('Phone')" class="radio"
+                [(ngModel)]="requestor.preferredContact" value="Phone">
+              <p id="radioButtonText">Phone</p>
+            </div>
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="contactChoice1" name="contact" class="radio" (click)="showEmail('Email')"
+                [(ngModel)]="requestor.preferredContact" value="Email">
+              <p id="radioButtonText">Email</p>
+            </div>
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="contactChoice1" name="contact" class="radio" (click)="showBoth('Phone and Email')"
+                [(ngModel)]="requestor.preferredContact" value="Phone and Email">
+              <p id="radioButtonText">Both</p>
+            </div>
+          </div> -->
+
+          <div *ngIf="showRequestor">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Mailing address 1</label>
+                <input class="form-control" #address1="ngModel" (change)="check_mailing1($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                  (keypress)="omit_special_char2($event,$event.target.value)" (change)="getAdd1($event.target.value)" [(ngModel)]="requestor.address1"
+                  type="text" placeholder="Street address, P.O box, company name, c/o" name="address1">
+                <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                  <div *ngIf="address1.errors?.requiredIf">
+                    address1 is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>Mailing address 2</label>
+                <input class="form-control" (change)="check_mailing2($event.target.value)" type="text" (keypress)="omit_special_char2($event,$event.target.value)"
+                  (change)="getAdd2($event.target.value)" [(ngModel)]="requestor.address2" placeholder="Apartment, suite, unit, building, floor, etc"
+                  name="address2">
+
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>City</label>
+                <input class="form-control" #city="ngModel" (change)="check_city($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                  (keypress)="omit_special_char($event,$event.target.value)" type="text" (change)="getCity($event.target.value)"
+                  [(ngModel)]="requestor.city" placeholder="City" name="city">
+                <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                  <div *ngIf="city.errors?.requiredIf">
+                    city is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>State</label>
+                <select id="inputState1" #state="ngModel" (change)="check_state($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                  [(ngModel)]="requestor.state" name="state7" class="form-control">
+                  <option [ngValue]="undefined" selected>Choose...</option>
+                  <option value="AL">Alabama</option>
+                  <option value="AK">Alaska</option>
+                  <option value="AZ">Arizona</option>
+                  <option value="AR">Arkansas</option>
+                  <option value="CA">California</option>
+                  <option value="CO">Colorado</option>
+                  <option value="CT">Connecticut</option>
+                  <option value="DE">Delaware</option>
+                  <option value="DC">District Of Columbia</option>
+                  <option value="FL">Florida</option>
+                  <option value="GA">Georgia</option>
+                  <option value="HI">Hawaii</option>
+                  <option value="ID">Idaho</option>
+                  <option value="IL">Illinois</option>
+                  <option value="IN">Indiana</option>
+                  <option value="IA">Iowa</option>
+                  <option value="KS">Kansas</option>
+                  <option value="KY">Kentucky</option>
+                  <option value="LA">Louisiana</option>
+                  <option value="ME">Maine</option>
+                  <option value="MD">Maryland</option>
+                  <option value="MA">Massachusetts</option>
+                  <option value="MI">Michigan</option>
+                  <option value="MN">Minnesota</option>
+                  <option value="MS">Mississippi</option>
+                  <option value="MO">Missouri</option>
+                  <option value="MT">Montana</option>
+                  <option value="NE">Nebraska</option>
+                  <option value="NV">Nevada</option>
+                  <option value="NH">New Hampshire</option>
+                  <option value="NJ">New Jersey</option>
+                  <option value="NM">New Mexico</option>
+                  <option value="NY">New York</option>
+                  <option value="NC">North Carolina</option>
+                  <option value="ND">North Dakota</option>
+                  <option value="OH">Ohio</option>
+                  <option value="OK">Oklahoma</option>
+                  <option value="OR">Oregon</option>
+                  <option value="PA">Pennsylvania</option>
+                  <option value="RI">Rhode Island</option>
+                  <option value="SC">South Carolina</option>
+                  <option value="SD">South Dakota</option>
+                  <option value="TN">Tennessee</option>
+                  <option value="TX">Texas</option>
+                  <option value="UT">Utah</option>
+                  <option value="VT">Vermont</option>
+                  <option value="VA">Virginia</option>
+                  <option value="WA">Washington</option>
+                  <option value="WV">West Virginia</option>
+                  <option value="WI">Wisconsin</option>
+                  <option value="WY">Wyoming</option>
+                </select>
+                <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                  <div *ngIf="state.errors?.requiredIf">
+                    state is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Zip Code</label>
+                <input class="form-control" (change)="check_zip($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                  (change)="getZip($event.target.value)" #name="ngModel" [(ngModel)]="requestorzipcode" type="text" OnlyNumber="true"
+                  placeholder="Zip Code" minlength="5" maxlength="5" pattern="(\d{5}([\-]\d{4})?)" ngModel name="name">
+                <div style="color:red" *ngIf="name.errors?.pattern">
+                  Zip code is invalid
+                </div>
+                <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                  <div *ngIf="name.errors?.requiredIf">
+                    zip code is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="showFourth">
+        <div class="formBox">
+          <h4 id="requestorInfo">Requestor's Information</h4>
+          <div class="form-row">
+            <div class="form-group col-md-6" id="preferredText">
+              <label>Are you a resident of Virginia?
+                <font color="red">*</font>
+              </label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="residencyChoice" ngModel name="residency" class="radio" [(ngModel)]="requestor.vaResident" (click)="saveResidency('Yes')"
+                value="Yes" required>
+              <p id="radioButtonText">Yes</p>
+            </div>
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="residencyChoice" ngModel name="residency" class="radio" [(ngModel)]="requestor.vaResident" (click)="saveResidency('No')"
+                value="No">
+              <p id="radioButtonText">No</p>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Requestor's First Name
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" [(ngModel)]="requestor.firstName" #nameUser="ngModel" autocomplete="off" type="text" placeholder="Requestor's First Name"
+                (keypress)="omit_special_char($event,$event.target.value)" ngModel name="usrnm22" required>
+              <div *ngIf="nameUser.touched" style="color:red">
+                <div *ngIf="nameUser.errors?.required">
+                  First Name is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Requestor's Last Name
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" [(ngModel)]="requestor.lastName" type="text" autocomplete="off" #nameUser1="ngModel" placeholder="Requestor's Last Name"
+                (keypress)="omit_special_char($event,$event.target.value)" ngModel name="lname9" required>
+              <div *ngIf="nameUser1.touched" style="color:red">
+                <div *ngIf="nameUser1.errors?.required">
+                  Last Name is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6 col-lg-4">
+              <label>Requestor's Phone
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" type="text" maxlength="17" (change)="getNumber($event.target.value)" [textMask]="{mask:mask}"
+                #contactUser="ngModel" autocomplete="off" placeholder="Requestor's Phone" OnlyNumber="true" [appAutoTab]="tap"
+                pattern="^(\+\d{1})?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$" ngModel name="phone22" required>
+              <div *ngIf="contactUser.touched" style="color:red">
+                <div *ngIf="contactUser.errors?.required">
+                  Phone Number is required
+                </div>
+              </div>
+              <div *ngIf="contactUser.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="contactUser.errors?.pattern">
+                  Please enter 10 digit phone number. Example: (123)-456-7890
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6 col-lg-4">
+              <label>Requestor's Email
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" type="email" (keypress)="omit_special_char2($event,$event.target.value)" [(ngModel)]="requestor.email"
+                ngModel name="emailUser" id="emailini" #emailUser="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                autocomplete="off" type="email" placeholder="Requestor's Email" #tap required>
+              <div *ngIf="emailUser.touched" style="color:red">
+                <div *ngIf="emailUser.errors?.required">
+                  Email is required
+                </div>
+              </div>
+              <div *ngIf="emailUser.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="emailUser.errors?.pattern">
+                  Please type your email address in the format: example@email.xyz
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6 col-lg-4">
+              <label>Confirm Requestor's Email
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" (keypress)="omit_special_char2($event,$event.target.value)" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                onpaste="return false" type="email" [(ngModel)]="requestor.confirmEmail" id="confemail" autocomplete="off"
+                #emailUser133="ngModel" ngModel name="emailUser133" placeholder="Confirm Requestor's Email" compare="emailUser"
+                required>
+              <div *ngIf="emailUser133.touched" style="color:red">
+                <div *ngIf="emailUser133.errors?.required">
+                  Email is required
+                </div>
+              </div>
+              <div *ngIf="emailUser133?.invalid && (emailUser133?.dirty || emailUser133?.touched)" style="color:red">
+                <div *ngIf="emailUser133.errors['compare']">Email does not match</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="form-row">
+            <div class="form-group col-md-6" id="preferredText">
+              <label>Preferred method of communication</label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="contactChoice1" name="contact" (click)="showPhone('Phone')" class="radio"
+                [(ngModel)]="requestor.preferredContact" value="Phone">
+              <p id="radioButtonText">Phone</p>
+            </div>
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="contactChoice1" name="contact" class="radio" (click)="showEmail('Email')"
+                [(ngModel)]="requestor.preferredContact" value="Email">
+              <p id="radioButtonText">Email</p>
+            </div>
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="contactChoice1" name="contact" class="radio" (click)="showBoth('Phone and Email')"
+                [(ngModel)]="requestor.preferredContact" value="Phone and Email">
+              <p id="radioButtonText">Both</p>
+            </div>
+          </div> -->
+
+          <div class="form-row">
+            <div class="form-group col-md-7 col-lg-6 col-xl-5" id="orgRequestText">
+              <label for="request" name="label">Is your request on behalf of an organization?
+                <font color="red">*</font>
+              </label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" (click)="showYes('Organization')" id="contactChoice2" ngModel name="contact5" class="radio" value="Organization"
+                required>
+              <p id="radioButtonText">Yes</p>
+            </div>
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="contactChoice2" name="contact5" class="radio" [(ngModel)]="requestor.requestorType" (click)="showNo('Individual')"
+                value="Individual">
+              <p id="radioButtonText">No</p>
+            </div>
+          </div>
+
+          <div *ngIf="showRequestor">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Mailing address 1</label>
+                <input class="form-control" #address1="ngModel" (change)="check_mailing1($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                  (keypress)="omit_special_char2($event,$event.target.value)" (change)="getAdd1($event.target.value)" [(ngModel)]="requestor.address1"
+                  type="text" placeholder="Street address, P.O box, company name, c/o" name="address1">
+                <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                  <div *ngIf="address1.errors?.requiredIf">
+                    address1 is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>Mailing address 2</label>
+                <input class="form-control" (change)="check_mailing2($event.target.value)" type="text" (keypress)="omit_special_char2($event,$event.target.value)"
+                  (change)="getAdd2($event.target.value)" [(ngModel)]="requestor.address2" placeholder="Apartment, suite, unit, building, floor, etc"
+                  name="address2">
+
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>City</label>
+                <input class="form-control" #city="ngModel" (change)="check_city($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                  (keypress)="omit_special_char($event,$event.target.value)" type="text" (change)="getCity($event.target.value)"
+                  [(ngModel)]="requestor.city" placeholder="City" name="city">
+                <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                  <div *ngIf="city.errors?.requiredIf">
+                    city is required
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>State</label>
+                <select id="inputState1" #state="ngModel" (change)="check_state($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                  [(ngModel)]="requestor.state" name="state7" class="form-control">
+                  <option [ngValue]="undefined" selected>Choose...</option>
+                  <option value="AL">Alabama</option>
+                  <option value="AK">Alaska</option>
+                  <option value="AZ">Arizona</option>
+                  <option value="AR">Arkansas</option>
+                  <option value="CA">California</option>
+                  <option value="CO">Colorado</option>
+                  <option value="CT">Connecticut</option>
+                  <option value="DE">Delaware</option>
+                  <option value="DC">District Of Columbia</option>
+                  <option value="FL">Florida</option>
+                  <option value="GA">Georgia</option>
+                  <option value="HI">Hawaii</option>
+                  <option value="ID">Idaho</option>
+                  <option value="IL">Illinois</option>
+                  <option value="IN">Indiana</option>
+                  <option value="IA">Iowa</option>
+                  <option value="KS">Kansas</option>
+                  <option value="KY">Kentucky</option>
+                  <option value="LA">Louisiana</option>
+                  <option value="ME">Maine</option>
+                  <option value="MD">Maryland</option>
+                  <option value="MA">Massachusetts</option>
+                  <option value="MI">Michigan</option>
+                  <option value="MN">Minnesota</option>
+                  <option value="MS">Mississippi</option>
+                  <option value="MO">Missouri</option>
+                  <option value="MT">Montana</option>
+                  <option value="NE">Nebraska</option>
+                  <option value="NV">Nevada</option>
+                  <option value="NH">New Hampshire</option>
+                  <option value="NJ">New Jersey</option>
+                  <option value="NM">New Mexico</option>
+                  <option value="NY">New York</option>
+                  <option value="NC">North Carolina</option>
+                  <option value="ND">North Dakota</option>
+                  <option value="OH">Ohio</option>
+                  <option value="OK">Oklahoma</option>
+                  <option value="OR">Oregon</option>
+                  <option value="PA">Pennsylvania</option>
+                  <option value="RI">Rhode Island</option>
+                  <option value="SC">South Carolina</option>
+                  <option value="SD">South Dakota</option>
+                  <option value="TN">Tennessee</option>
+                  <option value="TX">Texas</option>
+                  <option value="UT">Utah</option>
+                  <option value="VT">Vermont</option>
+                  <option value="VA">Virginia</option>
+                  <option value="WA">Washington</option>
+                  <option value="WV">West Virginia</option>
+                  <option value="WI">Wisconsin</option>
+                  <option value="WY">Wyoming</option>
+                </select>
+                <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                  <div *ngIf="state.errors?.requiredIf">
+                    state is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Zip Code</label>
+                <input class="form-control" (change)="check_zip($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                  (change)="getZip($event.target.value)" #name="ngModel" [(ngModel)]="requestorzipcode" type="text" OnlyNumber="true"
+                  placeholder="Zip Code" minlength="5" maxlength="5" pattern="(\d{5}([\-]\d{4})?)" ngModel name="name">
+                <div style="color:red" *ngIf="name.errors?.pattern">
+                  Zip code is invalid
+                </div>
+                <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                  <div *ngIf="name.errors?.requiredIf">
+                    zip code is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="forSecond">
+        <div class="formBox top-space bottom-space">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Organization Name
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" #nUser="ngModel" (keypress)="omit_special_char($event,$event.target.value)" type="text" [(ngModel)]="requestor.organizationName"
+                placeholder="Organization Name" ngModel name="notworking" required>
+              <div *ngIf="nUser.touched" style="color:red">
+                <div *ngIf="nUser.errors?.required">
+                  Organization Name is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Fax Number</label>
+              <input class="form-control" OnlyNumber="true" pattern="^(\+\d{1})?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$" (change)="getNumber($event.target.value)"
+                #contact1="ngModel" minlength="16" [textMask]="{mask:mask}" type="text" placeholder="Fax Number" [appAutoTab]="tap1"
+                ngModel name="fax">
+              <div *ngIf="contact1.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="contact1.errors?.pattern">
+                  Please enter 10 digit fax number. Example: (123)-456-7890
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Mailing address 1</label>
+              <input class="form-control" #address1="ngModel" (change)="check_mailing1($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                type="text" (change)="getAdd1($event.target.value)" (keypress)="omit_special_char2($event,$event.target.value)"
+                [(ngModel)]="requestor.address1" placeholder="Street address, P.O box, company name, c/o" name="address1">
+              <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                <div *ngIf="address1.errors?.requiredIf">
+                  address1 is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Mailing address 2</label>
+              <input class="form-control" (change)="check_mailing2($event.target.value)" type="text" (change)="getAdd2($event.target.value)"
+                (keypress)="omit_special_char2($event,$event.target.value)" [(ngModel)]="requestor.address2" placeholder="Apartment, suite, unit, building, floor, etc"
+                name="address2">
+
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>City</label>
+              <input class="form-control" #city="ngModel" (change)="check_city($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                (keypress)="omit_special_char2($event,$event.target.value)" (change)="getCity($event.target.value)" [(ngModel)]="requestor.city"
+                type="text" placeholder="City" name="city">
+              <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                <div *ngIf="city.errors?.requiredIf">
+                  city is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>State</label>
+              <select [(ngModel)]="requestor.state" #state3="ngModel" (change)="check_state($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                name="state3" class="form-control">
+                <option [ngValue]="undefined" selected>Choose...</option>
+                <option value="AL">Alabama</option>
+                <option value="AK">Alaska</option>
+                <option value="AZ">Arizona</option>
+                <option value="AR">Arkansas</option>
+                <option value="CA">California</option>
+                <option value="CO">Colorado</option>
+                <option value="CT">Connecticut</option>
+                <option value="DE">Delaware</option>
+                <option value="DC">District Of Columbia</option>
+                <option value="FL">Florida</option>
+                <option value="GA">Georgia</option>
+                <option value="HI">Hawaii</option>
+                <option value="ID">Idaho</option>
+                <option value="IL">Illinois</option>
+                <option value="IN">Indiana</option>
+                <option value="IA">Iowa</option>
+                <option value="KS">Kansas</option>
+                <option value="KY">Kentucky</option>
+                <option value="LA">Louisiana</option>
+                <option value="ME">Maine</option>
+                <option value="MD">Maryland</option>
+                <option value="MA">Massachusetts</option>
+                <option value="MI">Michigan</option>
+                <option value="MN">Minnesota</option>
+                <option value="MS">Mississippi</option>
+                <option value="MO">Missouri</option>
+                <option value="MT">Montana</option>
+                <option value="NE">Nebraska</option>
+                <option value="NV">Nevada</option>
+                <option value="NH">New Hampshire</option>
+                <option value="NJ">New Jersey</option>
+                <option value="NM">New Mexico</option>
+                <option value="NY">New York</option>
+                <option value="NC">North Carolina</option>
+                <option value="ND">North Dakota</option>
+                <option value="OH">Ohio</option>
+                <option value="OK">Oklahoma</option>
+                <option value="OR">Oregon</option>
+                <option value="PA">Pennsylvania</option>
+                <option value="RI">Rhode Island</option>
+                <option value="SC">South Carolina</option>
+                <option value="SD">South Dakota</option>
+                <option value="TN">Tennessee</option>
+                <option value="TX">Texas</option>
+                <option value="UT">Utah</option>
+                <option value="VT">Vermont</option>
+                <option value="VA">Virginia</option>
+                <option value="WA">Washington</option>
+                <option value="WV">West Virginia</option>
+                <option value="WI">Wisconsin</option>
+                <option value="WY">Wyoming</option>
+              </select>
+              <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                <div *ngIf="state3.errors?.requiredIf">
+                  state is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Zip Code</label>
+              <input class="form-control" #name1="ngModel" (change)="getZip($event.target.value)" [(ngModel)]="requestor.zipcode" type="text"
+                OnlyNumber="true" placeholder="Zip Code" pattern="(\d{5}([\-]\d{4})?)" (change)="check_zip($event.target.value)"
+                [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState" minlength="5" maxlength="5" ngModel name="name1">
+              <div style="color:red" *ngIf="name1.errors?.pattern">
+                Zip code is invalid
+              </div>
+              <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                <div *ngIf="name1.errors?.requiredIf">
+                  zip code is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row" id="description">
+            <label for="number">Briefly describe your request
+              <font color="red">*</font>
+            </label>
+            <textarea cols="156" [(ngModel)]="report.description" rows="7" id="summernote" ngModel name="purpose1" [ngxSummernote]="config"
+              required></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="showMailing">
+        <div class="formBox top-space">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Organization Name
+                <font color="red">*</font>
+              </label>
+              <input class="form-control" #nUser2="ngModel" type="text" (keypress)="omit_special_char($event,$event.target.value)" [(ngModel)]="requestor.organizationName"
+                placeholder="Organization Name" ngModel name="notworking1" required>
+              <div *ngIf="nUser2.touched" style="color:red">
+                <div *ngIf="nUser2.errors?.required">
+                  Organization Name is required
+                </div>
+              </div>
+            </div>
+
+
+            <div class="form-group col-md-6">
+              <label>Fax Number</label>
+              <input class="form-control" (change)="getNumber4($event.target.value)" [textMask]="{mask:mask}" type="text" OnlyNumber="true"
+                #contact1="ngModel" pattern="^(\+\d{1})?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$" placeholder="Fax Number" ngModel
+                name="fax" maxlength="17" [appAutoTab]="tap1">
+              <div *ngIf="contact1.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="contact1.errors?.pattern">
+                  Please enter 10 digit fax number. Example: (123)-456-7890
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Mailing address 1</label>
+              <input class="form-control" type="text" #tap1 (keypress)="omit_special_char2($event,$event.target.value)" (change)="getAdd1($event.target.value)"
+                [(ngModel)]="requestor.address12" placeholder="Street address, P.O box, company name, c/o" name="address12"
+                #address1="ngModel" (change)="check_mailing1($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState">
+              <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                <div *ngIf="address1.errors?.requiredIf">
+                  address1 is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Mailing address 2</label>
+              <input class="form-control" (change)="check_mailing2($event.target.value)" type="text" (keypress)="omit_special_char2($event,$event.target.value)"
+                (change)="getAdd2($event.target.value)" [(ngModel)]="requestor.address2" placeholder="Apartment, suite, unit, building, floor, etc"
+                name="address2">
+
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>City</label>
+              <input class="form-control" #city="ngModel" (change)="check_city($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                (keypress)="omit_special_char2($event,$event.target.value)" (change)="getCity($event.target.value)" type="text"
+                [(ngModel)]="requestor.city" placeholder="City" name="city">
+              <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                <div *ngIf="address1.errors?.requiredIf">
+                  city is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>State</label>
+              <select id="inputState3" #state="ngModel" (change)="check_state($event.target.value)" [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState"
+                [(ngModel)]="requestor.state" name="state0" class="form-control">
+                <option [ngValue]="undefined" selected>Choose...</option>
+                <option value="AL">Alabama</option>
+                <option value="AK">Alaska</option>
+                <option value="AZ">Arizona</option>
+                <option value="AR">Arkansas</option>
+                <option value="CA">California</option>
+                <option value="CO">Colorado</option>
+                <option value="CT">Connecticut</option>
+                <option value="DE">Delaware</option>
+                <option value="DC">District Of Columbia</option>
+                <option value="FL">Florida</option>
+                <option value="GA">Georgia</option>
+                <option value="HI">Hawaii</option>
+                <option value="ID">Idaho</option>
+                <option value="IL">Illinois</option>
+                <option value="IN">Indiana</option>
+                <option value="IA">Iowa</option>
+                <option value="KS">Kansas</option>
+                <option value="KY">Kentucky</option>
+                <option value="LA">Louisiana</option>
+                <option value="ME">Maine</option>
+                <option value="MD">Maryland</option>
+                <option value="MA">Massachusetts</option>
+                <option value="MI">Michigan</option>
+                <option value="MN">Minnesota</option>
+                <option value="MS">Mississippi</option>
+                <option value="MO">Missouri</option>
+                <option value="MT">Montana</option>
+                <option value="NE">Nebraska</option>
+                <option value="NV">Nevada</option>
+                <option value="NH">New Hampshire</option>
+                <option value="NJ">New Jersey</option>
+                <option value="NM">New Mexico</option>
+                <option value="NY">New York</option>
+                <option value="NC">North Carolina</option>
+                <option value="ND">North Dakota</option>
+                <option value="OH">Ohio</option>
+                <option value="OK">Oklahoma</option>
+                <option value="OR">Oregon</option>
+                <option value="PA">Pennsylvania</option>
+                <option value="RI">Rhode Island</option>
+                <option value="SC">South Carolina</option>
+                <option value="SD">South Dakota</option>
+                <option value="TN">Tennessee</option>
+                <option value="TX">Texas</option>
+                <option value="UT">Utah</option>
+                <option value="VT">Vermont</option>
+                <option value="VA">Virginia</option>
+                <option value="WA">Washington</option>
+                <option value="WV">West Virginia</option>
+                <option value="WI">Wisconsin</option>
+                <option value="WY">Wyoming</option>
+              </select>
+              <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                <div *ngIf="state.errors?.requiredIf">
+                  state is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Zip Code</label>
+              <input class="form-control" #name2="ngModel" pattern="(\d{5}([\-]\d{4})?)" (change)="check_mailing1($event.target.value)"
+                [requiredIf]="ifAd1||ifAd2||ifCity||ifZip||ifState" (change)="getZip($event.target.value)" #name2="ngModel"
+                type="text" [(ngModel)]="requestor.zipcode" OnlyNumber="true" placeholder="Zip Code" minlength="5" maxlength="5"
+                name="name2">
+              <div style="color:red" *ngIf="name2.errors?.pattern">
+                Zip code is invalid
+              </div>
+              <div *ngIf="ifAd1||ifAd2||ifCity||ifZip||ifState" style="color:red">
+                <div *ngIf="name2.errors?.requiredIf">
+                  zip code is required
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="formBox top-space bottom-space" *ngIf="showBreif">
+        <div class="form-row" id="description">
+          <label for="number">Briefly describe your request
+            <font color="red">*</font>
+          </label>
+          <textarea cols="156" rows="7" [(ngModel)]="report.description" id="summernote" ngModel name="purpose3" [ngxSummernote]="config"
+            required></textarea>
+        </div>
+      </div>
+    </form>
+
+    <p align="right">
+      <button type="submit" *ngIf="showBtn" form="myForm" class="btn submitButton" [disabled]="!editPro.valid">Submit</button>
+    </p>
+  </div>
+</form>

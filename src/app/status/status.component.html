@@ -1,0 +1,108 @@
+<form class="p1">
+  <div>
+    <i class="fa fa-home" aria-hidden="true" style="font-size: 250%; padding-right: 5px; cursor: pointer;" title="Home"
+      routerLink='/home'></i>
+    <i style="font-size: 200%; cursor: pointer;" title="Back" (click)="clickArrow()" class="fa fa-arrow-left"
+      aria-hidden="true"></i>
+  </div>
+  <div class="p2">
+    <span id="heading">
+      Status
+    </span>
+  </div>
+  <form class="form" (ngSubmit)="getStatusByTicketID()" enctype="multipart/form-data" #editPro="ngForm">
+    <div class="p3">
+      <div class="form-row">
+        <p style="padding-left: 5px;"><b>Note: Please enter your ticket number and the email address that you have provided at the time of submitting your request.</b></p>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6" *ngIf="showError" style="color:red">Invalid Ticket ID or Email
+          address.</div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Ticket ID<font color="red">*</font></label>
+          <input class="form-control" #ticket="ngModel" minlength="7" maxlength="7" [(ngModel)]="statusRequest.ticketID"
+            ngModel name="ticket" (keypress)="omit_special_char($event,$event.target.value)" placeholder="Enter your Ticket ID"
+            type="text" required>
+          <div *ngIf="ticket.touched" style="color:red">
+            <div *ngIf="ticket.errors?.required">
+              Ticket ID is required
+            </div>
+          </div>
+          <div *ngIf="ticket.dirty" style="color:red">
+            <div class="help-block" style="color:red;" *ngIf="ticket.errors?.minlength">
+              Please type your valid Ticket ID
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Email<font color="red">*</font></label>
+          <input class="form-control" #emailUser="ngModel" [(ngModel)]="statusRequest.email" ngModel name="emailUser"
+            (keypress)="omit_special_char1($event,$event.target.value)" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+            type="email" placeholder="Enter your email address" required>
+          <div *ngIf="emailUser.touched" style="color:red">
+            <div *ngIf="emailUser.errors?.required">
+              Email is required
+            </div>
+          </div>
+          <div *ngIf="emailUser.dirty" style="color:red">
+            <div class="help-block" style="color:red;" *ngIf="emailUser.errors?.pattern">
+              Please type your email address in the format: example@email.xyz
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="form-row">
+        <div class="form-group col-md-6" align="center">
+          <label>(OR)</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label>Member's Email<font color="red">*</font></label>
+          <input class="form-control" #emailMember="ngModel" [(ngModel)]="statusRequest.memEmail" ngModel name="emailMember"
+            (keypress)="omit_special_char1($event,$event.target.value)" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+            type="email" placeholder="Enter the member's email address">
+          <div *ngIf="emailMember.touched" style="color:red">
+            <div *ngIf="emailMember.errors?.required">
+              Email is required
+            </div>
+          </div>
+          <div *ngIf="emailMember.dirty" style="color:red">
+            <div class="help-block" style="color:red;" *ngIf="emailMember.errors?.pattern">
+              Please type your email address in the format: example@email.xyz
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <div style="width: 49.5%">
+        <p align="right">
+          <button type="submit" *ngIf="showBtn" (click)="showButton()" class="btn submitButton" [disabled]="!editPro.form.valid">Submit</button>
+        </p>
+      </div>
+      <!-- <i style="float: right;padding-bottom: 8px;cursor: pointer;" *ngIf="showArrow" (click)="clickArrow()" class="fa fa-arrow-left"
+      aria-hidden="true"></i> -->
+      <div *ngIf="showResult">
+        <div class="formBox">
+          <h4>Status: {{status.status}}</h4>
+          <h4>Description: {{status.reason.description}}</h4>
+          <div class="form-row">
+          </div>
+        </div>
+        <div class="goToHome">
+          <button type="submit" class="btn submitButton" style="margin-top: 10px;" (click)="searchAnother()">Search
+            another ticket</button>
+        </div>
+      </div>
+      <div style="height: 119px;"></div>
+    </div>
+  </form>
+</form>

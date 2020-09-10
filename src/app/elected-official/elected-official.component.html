@@ -1,0 +1,746 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '10px'
+   }"></ngx-loading>
+<form class="p1">
+  <div>
+    <i class="fa fa-home" aria-hidden="true" style="font-size: 250%; padding-right: 5px; cursor: pointer;" title="Home"
+      routerLink='/home'></i>
+    <i style="font-size: 200%; cursor: pointer;" title="Back" (click)="clickArrow()" class="fa fa-arrow-left"
+      aria-hidden="true"></i>
+  </div>
+  <div class="p2">
+    <span id="heading">
+      Elected Official Request
+    </span>
+  </div>
+
+  <ng-template #content1 let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Leaving Contact Forms</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>You are being redirected to another website.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark button-close" (click)="c()">Cancel</button>
+      <button type="button" class="btn btn-outline-dark button-yes" (click)="redirect();c();">OK</button>
+    </div>
+  </ng-template>
+
+  <form enctype="multipart/form-data" (ngSubmit)=" saveElectedOfficialRequest()" #editPro="ngForm">
+    <div class="p3">
+      <app-disclaimer></app-disclaimer>
+
+      <div class="form-row" id="head">
+        <div class="form-group col-md-9" id="headText">
+          <legend><b>Constituent/<wbr>Information Requests from Elected Officials</b></legend>
+        </div>
+        <div class="form-group col-md-3" id="headText">
+          <label class="requiredTextEO">
+            <font color="red">*</font>Required fields
+          </label>
+        </div>
+        <div class="form-group" id="headText">
+          <p id="info" align="justify">This request form is for use by offices of elected officials only. Inquiries
+            submitted
+            through this form are monitored Monday through Friday between 8 AM and 5 PM Eastern Time, except for
+            state holidays.
+          </p>
+        </div>
+      </div>
+
+      <!-- <div class="formBox">
+        <h4 id="requestorInfo">Requestor's Information</h4>
+        <div class="form-row">
+          <div class="form-group col-md-6" id="preferredText">
+            <label>Are you a resident of Virginia?<font color="red">*</font></label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-3 col-lg-2 left-space">
+            <input type="radio" id="residencyChoice" ngModel name="residency" class="radio" [(ngModel)]="requestorDto.vaResident"
+              (click)="saveResidency('Yes')" value="Yes" required>
+            <p id="radioButtonText">Yes</p>
+          </div>
+          <div class="form-group col-md-3 col-lg-2 left-space">
+            <input type="radio" id="residencyChoice" ngModel name="residency" class="radio" [(ngModel)]="requestorDto.vaResident"
+              (click)="saveResidency('No')" value="No">
+            <p id="radioButtonText">No</p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Requestor's First Name<font color="red">*</font></label>
+            <input class="form-control" [(ngModel)]="requestorDto.firstName" #nameUser="ngModel" autocomplete="off"
+              type="text" placeholder="Requestor's First Name" maxlength="160" (keypress)="omit_special_char($event,$event.target.value)"
+              ngModel name="usrnm" required>
+            <div *ngIf="nameUser.touched" style="color:red">
+              <div *ngIf="nameUser.errors?.required">
+                First Name is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-6">
+            <label>Requestor's Last Name<font color="red">*</font></label>
+            <input class="form-control" type="text" maxlength="160" [(ngModel)]="requestorDto.lastName" autocomplete="off"
+              #nameUser1="ngModel" placeholder="Requestor's Last Name" (keypress)="omit_special_char($event,$event.target.value)"
+              ngModel name="lname" required>
+            <div *ngIf="nameUser1.touched" style="color:red">
+              <div *ngIf="nameUser1.errors?.required">
+                Last Name is required
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6 col-lg-4">
+            <label>Requestor's Phone<font color="red">*</font></label>
+            <input class="form-control" type="text" [textMask]="{mask:mask}" #contactUser33="ngModel" autocomplete="off"
+              OnlyNumber="true" pattern="^(\+\d{1})?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$" ngModel name="phone" required
+              (change)="getNumber($event.target.value)" placeholder="Requestor's Phone" maxlength="17" [appAutoTab]="tap">
+            <div *ngIf="contactUser33.touched" style="color:red">
+              <div *ngIf="contactUser33.errors?.required">
+                Phone Number is required
+              </div>
+            </div>
+            <div *ngIf="contactUser33.dirty" style="color:red">
+              <div class="help-block" style="color:red;" *ngIf="contactUser33.errors?.pattern">
+                Please enter 10 digit phone number. Example: 1234567890
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-6 col-lg-4">
+            <label>Requestor's Email<font color="red">*</font></label>
+            <input class="form-control" type="email" (keypress)="omit_special_char2($event,$event.target.value)"
+              ngModel name="emailUser" [(ngModel)]="requestorDto.email" id="emailini" #emailUser="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+              autocomplete="off" type="email" #tap placeholder="Requestor's Email" required>
+            <div *ngIf="emailUser.touched" style="color:red">
+              <div *ngIf="emailUser.errors?.required">
+                Email is required
+              </div>
+            </div>
+            <div *ngIf="emailUser.dirty" style="color:red">
+              <div class="help-block" style="color:red;" *ngIf="emailUser.errors?.pattern">
+                Please type your email address in the format: example@email.xyz
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-6 col-lg-4">
+            <label>Confirm Requestor's Email<font color="red">*</font></label>
+            <input class="form-control" type="email" id="confemail" [(ngModel)]="requestorDto.confirmEmail"
+              autocomplete="off" onpaste="return false" #emailUser1="ngModel" ngModel name="emailUser1" placeholder="Confirm Requestor's Email"
+              compare="emailUser" required>
+            <div *ngIf="emailUser1.touched" style="color:red">
+              <div *ngIf="emailUser1.errors?.required">
+                Email is required
+              </div>
+            </div>
+
+
+            <div *ngIf="emailUser1?.invalid && (emailUser1?.dirty || emailUser1?.touched)" style="color:red">
+              <div *ngIf="emailUser1.errors['compare']">Email does not match</div>
+            </div>
+            <div *ngIf="emailUser1.dirty" style="color:red">
+              <div class="help-block" style="color:red;" *ngIf="emailUser1.errors?.pattern">
+                Please type your email address in the format: example@email.xyz
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6" id="preferredText">
+            <label>Preferred method of communication</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-3 col-lg-2 left-space">
+            <input type="radio" id="contactChoice1" name="contact5" (click)="showPhone('Phone')" class="radio"
+              [(ngModel)]="requestorDto.preferredContact" value="Phone">
+            <p id="radioButtonText">Phone</p>
+          </div>
+          <div class="form-group col-md-3 col-lg-2 left-space">
+            <input type="radio" id="contactChoice1" name="contact5" class="radio" (click)="showEmail('Email')"
+              [(ngModel)]="requestorDto.preferredContact" value="Email">
+            <p id="radioButtonText">Email</p>
+          </div>
+          <div class="form-group col-md-3 col-lg-2 left-space">
+            <input type="radio" id="contactChoice1" name="contact5" class="radio" (click)="showBoth('Phone and Email')"
+              [(ngModel)]="requestorDto.preferredContact" value="Phone and Email">
+            <p id="radioButtonText">Both</p>
+          </div>
+        </div>
+      </div> -->
+
+      <div class="formBox top-space bottom-space">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Elected Official's First Name<font color="red">*</font></label>
+            <input class="form-control" type="text" maxlength="160" [(ngModel)]="elected.officialFirstname"
+              autocomplete="off" #nameUser4="ngModel" (keypress)="omit_special_char($event,$event.target.value)"
+              placeholder="Elected Official's First Name" ngModel name="Offical" required>
+            <div *ngIf="nameUser4.touched" style="color:red">
+              <div *ngIf="nameUser4.errors?.required">
+                First Name is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-6">
+            <label>Elected Official's Last Name<font color="red">*</font></label>
+            <input class="form-control" type="text" maxlength="160" autocomplete="off" [(ngModel)]="elected.officialLastname"
+              #nameUser3="ngModel" placeholder="Elected Official's Last Name" (keypress)="omit_special_char($event,$event.target.value)"
+              ngModel name="Offical1" required>
+            <div *ngIf="nameUser3.touched" style="color:red">
+              <div *ngIf="nameUser3.errors?.required">
+                Last Name is required
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Staff's First Name</label>
+            <input class="form-control" type="text" maxlength="160" [(ngModel)]="elected.officialFirstname"
+              autocomplete="off" #nameUser4="ngModel" (keypress)="omit_special_char($event,$event.target.value)"
+              placeholder="Staff's First Name" ngModel name="Offical">
+            <div *ngIf="nameUser4.touched" style="color:red">
+              <div *ngIf="nameUser4.errors?.required">
+                First Name is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-6">
+            <label>Staff's Last Name</label>
+            <input class="form-control" type="text" maxlength="160" autocomplete="off" [(ngModel)]="elected.officialLastname"
+              #nameUser3="ngModel" placeholder="Staff's Last Name" (keypress)="omit_special_char($event,$event.target.value)"
+              ngModel name="Offical1">
+            <div *ngIf="nameUser3.touched" style="color:red">
+              <div *ngIf="nameUser3.errors?.required">
+                Last Name is required
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6 col-lg-4">
+            <label>Phone<font color="red">*</font></label>
+            <input class="form-control" type="text" [textMask]="{mask:mask}" #contactUser33="ngModel" autocomplete="off"
+              OnlyNumber="true" pattern="^(\+\d{1})?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$" ngModel name="phone" required
+              (change)="getNumber($event.target.value)" placeholder="Phone" maxlength="17"
+              [appAutoTab]="tap">
+            <div *ngIf="contactUser33.touched" style="color:red">
+              <div *ngIf="contactUser33.errors?.required">
+                Phone Number is required
+              </div>
+            </div>
+            <div *ngIf="contactUser33.dirty" style="color:red">
+              <div class="help-block" style="color:red;" *ngIf="contactUser33.errors?.pattern">
+                Please enter 10 digit phone number. Example: 1234567890
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-6 col-lg-4">
+            <label>Contact Email<font color="red">*</font></label>
+            <input class="form-control" type="email" (keypress)="omit_special_char2($event,$event.target.value)"
+              ngModel name="emailUser" [(ngModel)]="requestorDto.email" id="emailini" #emailUser="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+              autocomplete="off" type="email" #tap placeholder="Contact Email" required>
+            <div *ngIf="emailUser.touched" style="color:red">
+              <div *ngIf="emailUser.errors?.required">
+                Email is required
+              </div>
+            </div>
+            <div *ngIf="emailUser.dirty" style="color:red">
+              <div class="help-block" style="color:red;" *ngIf="emailUser.errors?.pattern">
+                Please type your email address in the format: example@email.xyz
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-6 col-lg-4">
+            <label>Confirm Contact Email<font color="red">*</font></label>
+            <input class="form-control" type="email" id="confemail" [(ngModel)]="requestorDto.confirmEmail"
+              autocomplete="off" onpaste="return false" #emailUser1="ngModel" ngModel name="emailUser1" placeholder="Confirm Contact Email"
+              compare="emailUser" required>
+            <div *ngIf="emailUser1.touched" style="color:red">
+              <div *ngIf="emailUser1.errors?.required">
+                Email is required
+              </div>
+            </div>
+
+
+            <div *ngIf="emailUser1?.invalid && (emailUser1?.dirty || emailUser1?.touched)" style="color:red">
+              <div *ngIf="emailUser1.errors['compare']">Email does not match</div>
+            </div>
+            <div *ngIf="emailUser1.dirty" style="color:red">
+              <div class="help-block" style="color:red;" *ngIf="emailUser1.errors?.pattern">
+                Please type your email address in the format: example@email.xyz
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="form-row">
+          <div class="form-group col-md-6" id="preferredText">
+            <label>Preferred method of communication</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-3 col-lg-2 left-space">
+            <input type="radio" id="contactChoice1" name="contact5" (click)="showPhone('Phone')" class="radio"
+              [(ngModel)]="requestorDto.preferredContact" value="Phone">
+            <p id="radioButtonText">Phone</p>
+          </div>
+          <div class="form-group col-md-3 col-lg-2 left-space">
+            <input type="radio" id="contactChoice1" name="contact5" class="radio" (click)="showEmail('Email')"
+              [(ngModel)]="requestorDto.preferredContact" value="Email">
+            <p id="radioButtonText">Email</p>
+          </div>
+          <div class="form-group col-md-3 col-lg-2 left-space">
+            <input type="radio" id="contactChoice1" name="contact5" class="radio" (click)="showBoth('Phone and Email')"
+              [(ngModel)]="requestorDto.preferredContact" value="Phone and Email">
+            <p id="radioButtonText">Both</p>
+          </div>
+        </div> -->
+
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Official's Street Address 1</label>
+            <input class="form-control" type="text" (keypress)="omit_special_char2($event,$event.target.value)" #nAdd="ngModel"
+              [(ngModel)]="requestorDto.address1" placeholder="Street address, P.O box, company name, c/o" ngModel name="street1">
+            <div *ngIf="nAdd.touched" style="color:red">
+              <div *ngIf="nAdd.errors?.required">
+                Official Street Address 1 is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-6">
+            <label>Official's Street Address 2</label>
+            <input class="form-control" type="text" (keypress)="omit_special_char2($event,$event.target.value)"
+              (change)="getAdd2($event.target.value)" [(ngModel)]="requestorDto.address2" placeholder="Apartment, suite, unit, building, floor, etc"
+              name="street2">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>City</label>
+            <input class="form-control" #nCity="ngModel" (keypress)="omit_special_char($event,$event.target.value)"
+              type="text" [(ngModel)]="requestorDto.city" placeholder="City" ngModel name="city">
+            <div *ngIf="nCity.touched" style="color:red">
+              <div *ngIf="nCity.errors?.required">
+                City is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group col-md-6">
+            <label>State</label>
+            <select id="inputState" #state="ngModel" ngModel name="state" [(ngModel)]="requestorDto.state" class="form-control">
+              <option [ngValue]="undefined" selected>Choose...</option>
+              <option value="AK">Alaska</option>
+              <option value="AZ">Arizona</option>
+              <option value="AR">Arkansas</option>
+              <option value="CA">California</option>
+              <option value="CO">Colorado</option>
+              <option value="CT">Connecticut</option>
+              <option value="DE">Delaware</option>
+              <option value="DC">District Of Columbia</option>
+              <option value="FL">Florida</option>
+              <option value="GA">Georgia</option>
+              <option value="HI">Hawaii</option>
+              <option value="ID">Idaho</option>
+              <option value="IL">Illinois</option>
+              <option value="IN">Indiana</option>
+              <option value="IA">Iowa</option>
+              <option value="KS">Kansas</option>
+              <option value="KY">Kentucky</option>
+              <option value="LA">Louisiana</option>
+              <option value="ME">Maine</option>
+              <option value="MD">Maryland</option>
+              <option value="MA">Massachusetts</option>
+              <option value="MI">Michigan</option>
+              <option value="MN">Minnesota</option>
+              <option value="MS">Mississippi</option>
+              <option value="MO">Missouri</option>
+              <option value="MT">Montana</option>
+              <option value="NE">Nebraska</option>
+              <option value="NV">Nevada</option>
+              <option value="NH">New Hampshire</option>
+              <option value="NJ">New Jersey</option>
+              <option value="NM">New Mexico</option>
+              <option value="NY">New York</option>
+              <option value="NC">North Carolina</option>
+              <option value="ND">North Dakota</option>
+              <option value="OH">Ohio</option>
+              <option value="OK">Oklahoma</option>
+              <option value="OR">Oregon</option>
+              <option value="PA">Pennsylvania</option>
+              <option value="RI">Rhode Island</option>
+              <option value="SC">South Carolina</option>
+              <option value="SD">South Dakota</option>
+              <option value="TN">Tennessee</option>
+              <option value="TX">Texas</option>
+              <option value="UT">Utah</option>
+              <option value="VT">Vermont</option>
+              <option value="VA">Virginia</option>
+              <option value="WA">Washington</option>
+              <option value="WV">West Virginia</option>
+              <option value="WI">Wisconsin</option>
+              <option value="WY">Wyoming</option>
+            </select>
+            <div *ngIf="state.touched" style="color:red">
+              <div *ngIf="state.errors?.required">
+                State is required
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label>Zip Code</label>
+            <input class="form-control" #zip2="ngModel" type="text" OnlyNumber="true" [(ngModel)]="requestorDto.zipcode"
+              placeholder="Zip Code" minlength="5" maxlength="5" ngModel name="zip2">
+            <div *ngIf="zip2.touched" style="color:red">
+              <div *ngIf="zip2.errors?.required">
+                Zip Code is required
+              </div>
+            </div>
+            <div *ngIf="zip2.dirty" style="color:red">
+              <div class="help-block" style="color:red;" *ngIf="zip2.errors?.minlength">
+                Zip Code is invalid
+              </div>
+            </div>
+            <!-- <div *ngIf="zip2.dirty" style="color:red">  
+            <div style="color:red"   [hidden]="zip2.valid || zip2.pristine">
+              Zip code is invalid
+            </div>  -->
+            <!-- <div style="color:red" *ngIf="zip2.dirty> && !zip2.valid">Zip Code is invalid</div> -->
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6 col-lg-5 col-xl-4" id="constituentText">
+            <label>Is this request regarding a constituent?</label>
+          </div>
+
+          <div class="form-group col-md-2 left-space">
+            <input type="radio" (click)="showSelect()" id="contactChoice2" [(ngModel)]="elected.constituent" name="contact0"
+              class="radio" value="Yes">
+            <p id="radioButtonText">Yes</p>
+          </div>
+          <div class="form-group col-md-2 left-space">
+            <input type="radio" id="contactChoice2" name="contact0" [(ngModel)]="elected.constituent" class="radio"
+              (click)="noSelect()" value="No">
+            <p id="radioButtonText">No</p>
+          </div>
+        </div>
+
+        <!-- Second -->
+        <div *ngIf="secondSelect">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>First Name of Constituent<font color="red">*</font></label>
+              <input class="form-control" type="text" #nameUser2="ngModel" autocomplete="off" [(ngModel)]="elected.constFirstname"
+                placeholder="First Name of Constituent" (keypress)="omit_special_char($event,$event.target.value)"
+                ngModel name="nameUser2" required>
+              <div *ngIf="nameUser2.touched" style="color:red">
+                <div *ngIf="nameUser2.errors?.required">
+                  First Name of Constituent is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Last Name of Constituent<font color="red">*</font></label>
+              <input class="form-control" type="text" #nameUser3="ngModel" [(ngModel)]="elected.constLastname"
+                placeholder="Last Name of Constituent" (keypress)="omit_special_char($event,$event.target.value)"
+                ngModel name="nameUser3" required>
+              <div *ngIf="nameUser3.touched" style="color:red">
+                <div *ngIf="nameUser3.errors?.required">
+                  Last Name of Constituent is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6 col-xl-4">
+              <label>Constituent's Phone Number<font color="red">*</font></label>
+              <input class="form-control" type="text" (keypress)="omit_special_char2($event,$event.target.value)"
+                [textMask]="{mask:mask}" #contactUser5="ngModel" autocomplete="off" OnlyNumber="true" pattern="^(\+\d{1})?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$"
+                ngModel name="contactUser5" required (change)="getNumber1($event.target.value)" maxlength="17"
+                placeholder="Constituent's Phone Number" [appAutoTab]="tap1">
+              <div *ngIf="contactUser5.touched" style="color:red">
+                <div *ngIf="contactUser5.errors?.required">
+                  Phone Number is required
+                </div>
+              </div>
+              <div *ngIf="contactUser5.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="contactUser5.errors?.pattern">
+                  Please enter 10 digit phone number. Example: 1234567890
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6 col-lg-4">
+              <label>Constituent's Email Address<font color="red">*</font></label>
+              <input class="form-control" type="email" (keypress)="omit_special_char2($event,$event.target.value)"
+                ngModel name="emailUser99" [(ngModel)]="elected.constEmail" id="emailini1" #emailUser99="ngModel"
+                pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" autocomplete="off" type="email" #tap1
+                placeholder="Constituent's Email Address" required>
+              <div *ngIf="emailUser99.touched" style="color:red">
+                <div *ngIf="emailUser99.errors?.required">
+                  Email is required
+                </div>
+              </div>
+              <div *ngIf="emailUser99.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="emailUser99.errors?.pattern">
+                  Please type your email address in the format: example@email.xyz
+                </div>
+              </div>
+            </div>
+
+
+            <div class="form-group col-md-6 col-lg-4">
+              <label>Confirm Constituent's Email Address<font color="red">*</font></label>
+              <input class="form-control" type="email" id="confemail1" [(ngModel)]="elected.confirmConstEmail"
+                autocomplete="off" onpaste="return false" #email6="ngModel" ngModel name="email6" placeholder="Confirm Constituent's Email Address"
+                autocomplete="off" onpaste="return false" #email6="ngModel" ngModel name="email6" placeholder="Confirm Constituent's Email Address"
+                compare="emailUser99" required>
+              <div *ngIf="email6.touched" style="color:red">
+                <div *ngIf="email6.errors?.required">
+                  Email is required
+                </div>
+              </div>
+              <div *ngIf="email6?.invalid && (email6?.dirty || email6?.touched)" style="color:red">
+                <div *ngIf="email6.errors['compare']">Email does not match</div>
+              </div>
+              <div *ngIf="email6.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="email6.errors?.pattern">
+                  Please type your email address in the format: example@email.xyz
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-row">
+            <div class="form-group col-md-6 col-lg-5 col-xl-4" id="constituentText">
+              <label>Is this constituent a Medicaid Member?</label>
+            </div>
+            <div class="form-group col-md-2 left-space">
+              <input type="radio" (click)="showYes()" id="contactChoice2" name="contact" class="radio" value="yes">
+              <p id="radioButtonText">Yes</p>
+            </div>
+            <div class="form-group col-md-2 left-space">
+              <input type="radio" id="contactChoice2" name="contact" class="radio" (click)="showNo()" value="no">
+              <p id="radioButtonText">No</p>
+            </div>
+          </div>
+
+          <div *ngIf="showBanner">
+            <div class="form-row">
+              <div class="form-group">
+                <div id="medicaidTextbox">
+                  <h6 class="textBanner" align="justify">
+                    <i class="fa fa-info-circle" id="infoIcon" aria-hidden="true"></i>
+                    <b>If you do not know the Medicaid Member Number, the Social Security Number
+                      can help us locate records. If you have entered a correct Medicaid Member Number, there is no
+                      need to enter the Social Security Number.
+                    </b>
+                  </h6>
+                </div>
+              </div>
+
+              <!-- <div class="form-group col-md-5 col-xl-4"> -->
+              <div class="form-group col-md-6">
+                <label>Constituent's Medicaid ID Number</label>
+                <input class="form-control" type="text" placeholder="Please enter here" [(ngModel)]="elected.constMedID"
+                  (change)="getMedicaidID($event.target.value)" ngModel name="mId" #mId="ngModel" (keypress)="omit_special_char($event,$event.target.value)"
+                  minlength="12" maxlength="12">
+                <div *ngIf="mId.dirty" style="color:red">
+                  <div class="help-block" style="color:red;" *ngIf="mId.errors?.minlength">
+                    Constituent's Medicaid ID Number is invalid
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="form-group col-md-2 col-xl-4" align="center">
+                <label>(OR)</label>
+              </div> -->
+
+              <!-- <div class="form-group col-md-5 col-xl-4"> -->
+              <div class="form-group col-md-6">
+                <label>Constituent's Social Security Number</label>
+                <input class="form-control" type="text" OnlyNumber="true" (change)="getNumberSSN($event.target.value)"
+                  [textMask]="{mask:mask1}" pattern="^\d{3}-?\d{2}-?\d{4}$" placeholder="Please enter here" #ssn6="ngModel"
+                  ngModel name="ssn6">
+                <div *ngIf="ssn6.dirty" style="color:red">
+                  <div class="help-block" style="color:red;" *ngIf="ssn6.errors?.pattern">
+                    Constituent's Social Security Number is invalid
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <!-- <div class="form-group col-md-5 col-xl-4"> -->
+              <div class="form-group col-md-6">
+                <label>Constituent's Date of Birth<font color="red">*</font></label>
+                <my-date-picker name="date" placeholder="mm/dd/yyyy" (dateChanged)="getStartDate($event)" #dob="ngModel" ngModel name="dob" [options]="myDatePickerOptions" required></my-date-picker>
+                <div *ngIf="dob.touched" style="color:red">
+                  <div *ngIf="dob.errors?.required">
+                    Constituent's Date of Birth is required
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Constituent's Street Address 1<font color="red">*</font></label>
+                <input class="form-control" type="text" (keypress)="omit_special_char2($event,$event.target.value)" #constituentstreet1="ngModel"
+                 placeholder="Street address, P.O box, company name, c/o" ngModel name="constituentStreet1"
+                  required>
+                <div *ngIf="constituentstreet1.touched" style="color:red">
+                  <div *ngIf="constituentstreet1.errors?.required">
+                    Constituent's Street Address 1 is required
+                  </div>
+                </div>
+              </div>
+    
+              <div class="form-group col-md-6">
+                <label>Constituent's Street Address 2</label>
+                <input class="form-control" type="text" (keypress)="omit_special_char2($event,$event.target.value)"
+                  placeholder="Apartment, suite, unit, building, floor, etc" name="constituentStreet2">
+              </div>
+            </div>
+    
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>City<font color="red">*</font></label>
+                <input class="form-control" #constituentCity="ngModel" (keypress)="omit_special_char($event,$event.target.value)"
+                  type="text" placeholder="City" ngModel name="constituentCity" required>
+                <div *ngIf="constituentCity.touched" style="color:red">
+                  <div *ngIf="constituentCity.errors?.required">
+                    City is required
+                  </div>
+                </div>
+              </div>
+    
+              <div class="form-group col-md-6">
+                <label>State<font color="red">*</font></label>
+                <select id="inputState" #constituentState="ngModel" ngModel name="constituentState" class="form-control"
+                  required>
+                  <option [ngValue]="undefined" selected>Choose...</option>
+                  <option value="AK">Alaska</option>
+                  <option value="AZ">Arizona</option>
+                  <option value="AR">Arkansas</option>
+                  <option value="CA">California</option>
+                  <option value="CO">Colorado</option>
+                  <option value="CT">Connecticut</option>
+                  <option value="DE">Delaware</option>
+                  <option value="DC">District Of Columbia</option>
+                  <option value="FL">Florida</option>
+                  <option value="GA">Georgia</option>
+                  <option value="HI">Hawaii</option>
+                  <option value="ID">Idaho</option>
+                  <option value="IL">Illinois</option>
+                  <option value="IN">Indiana</option>
+                  <option value="IA">Iowa</option>
+                  <option value="KS">Kansas</option>
+                  <option value="KY">Kentucky</option>
+                  <option value="LA">Louisiana</option>
+                  <option value="ME">Maine</option>
+                  <option value="MD">Maryland</option>
+                  <option value="MA">Massachusetts</option>
+                  <option value="MI">Michigan</option>
+                  <option value="MN">Minnesota</option>
+                  <option value="MS">Mississippi</option>
+                  <option value="MO">Missouri</option>
+                  <option value="MT">Montana</option>
+                  <option value="NE">Nebraska</option>
+                  <option value="NV">Nevada</option>
+                  <option value="NH">New Hampshire</option>
+                  <option value="NJ">New Jersey</option>
+                  <option value="NM">New Mexico</option>
+                  <option value="NY">New York</option>
+                  <option value="NC">North Carolina</option>
+                  <option value="ND">North Dakota</option>
+                  <option value="OH">Ohio</option>
+                  <option value="OK">Oklahoma</option>
+                  <option value="OR">Oregon</option>
+                  <option value="PA">Pennsylvania</option>
+                  <option value="RI">Rhode Island</option>
+                  <option value="SC">South Carolina</option>
+                  <option value="SD">South Dakota</option>
+                  <option value="TN">Tennessee</option>
+                  <option value="TX">Texas</option>
+                  <option value="UT">Utah</option>
+                  <option value="VT">Vermont</option>
+                  <option value="VA">Virginia</option>
+                  <option value="WA">Washington</option>
+                  <option value="WV">West Virginia</option>
+                  <option value="WI">Wisconsin</option>
+                  <option value="WY">Wyoming</option>
+                </select>
+                <div *ngIf="constituentState.touched" style="color:red">
+                  <div *ngIf="constituentState.errors?.required">
+                    State is required
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Zip Code<font color="red">*</font></label>
+                <input class="form-control" #constituentZip="ngModel" type="text" OnlyNumber="true"
+                  placeholder="Zip Code" minlength="5" maxlength="5" ngModel name="constituentZip" required>
+                <div *ngIf="constituentZip.touched" style="color:red">
+                  <div *ngIf="constituentZip.errors?.required">
+                    Zip Code is required
+                  </div>
+                </div>
+                <div *ngIf="constituentZip.dirty" style="color:red">
+                  <div class="help-block" style="color:red;" *ngIf="constituentZip.errors?.minlength">
+                    Zip Code is invalid
+                  </div>
+                </div>
+                <!-- <div *ngIf="zip2.dirty" style="color:red">  
+                <div style="color:red"   [hidden]="zip2.valid || zip2.pristine">
+                  Zip code is invalid
+                </div>  -->
+                <!-- <div style="color:red" *ngIf="zip2.dirty> && !zip2.valid">Zip Code is invalid</div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row" id="description">
+          <label for="number">Briefly describe your request<font color="red">*</font></label>
+          <textarea cols="156" rows="7" #text="ngModel" id="summernote" [(ngModel)]="elected.description" ngModel name="text"
+            [ngxSummernote]="config" required></textarea>
+        </div>
+      </div>
+
+      <p align="right">
+        <button type="submit" class="btn submitButton" [disabled]="!editPro.valid">Submit</button>
+      </p>
+    </div>
+  </form>
+</form>

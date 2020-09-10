@@ -1,0 +1,93 @@
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Information</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Please tell us about yourself. Are you a Virginia resident?<font color="red">*</font>
+    </p>
+  </div>
+  <div class="form-row" id="vaResident">
+    <div class="form-group col-md-4">
+      <h6><input type="radio" class="radio" (click)="c();goGrid('Yes')">Yes</h6>
+    </div>
+    <div class="form-group col-md-4">
+      <h6><input type="radio" class="radio" (click)="c();goGrid('No')">No</h6>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark button-close" (click)="c()">Close</button>
+  </div>
+</ng-template>
+
+
+
+<ng-template #content1 let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Leaving Contact Forms</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>You are being redirected to another website.</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark button-close" (click)="c()">Cancel</button>
+    <button type="button" class="btn btn-outline-dark button-yes" (click)="redirect();c();">OK</button>
+  </div>
+</ng-template>
+
+<form class="p1">
+  <div class="p2">
+    <span id="heading">
+      Contact
+    </span>
+  </div>
+
+  <div class="p3">
+    <div class="Banner">
+      <h6 class="textBanner" align="justify">
+        <i class="fa fa-info-circle" id="infoIcon" aria-hidden="true"></i>
+        <b>Please use this form to submit questions or comments about Virginia's Medicaid Program.DMAS is unable to
+          answer
+          any questions about Medicare because it is a federal program. For questions about Medicare please call
+          <a href="tel:18006334227"> 1-800-MEDICARE (1-800-633-4227)</a> or visit:
+          <a [routerLink]="" (click)="open(content1,'https://www.medicare.gov/forms-help-and-resources/contact/contact-medicare.html')"
+            id="url">
+            https://www.medicare.gov/forms-help-and-resources/contact/contact-medicare.html
+          </a></b>
+      </h6>
+    </div>
+
+    <div class="Banner">
+      <h6 class="textBanner" align="justify">
+        <i class="fa fa-info-circle" id="infoIcon" aria-hidden="true"></i>
+        <b>For enrollment questions or information, please visit <a [routerLink]="" (click)="open(content1,'http://www.coverva.org/')"
+            id="url">www.coverva.org</a>
+          or call <a href="tel:18552428282">1-855-242-8282 (Toll Free)</a>,<a href="tel:18882211590">1-888-221-1590
+            (TDD)</a></b>
+      </h6>
+    </div>
+
+    <div class="form-row" id="homeGrid">
+      <div class="form-group col-md-4">
+        <div class="box boxHome" style="line-height: 1; padding: 10px;" [routerLink]="" (click)="open(content1,'http://www.dmas.virginia.gov/#/appealsresources')">
+          <p style="padding: 0;">Appeals</p><p style="font-size: 16px; font-weight: 500;">(For client or provider appeals, please click here to go to our appeals page.)</p></div>
+      </div>
+
+      <div class="form-group col-md-4">
+        <div class="box boxHome" style="line-height: 1; padding: 10px;" routerLink="/grid">
+          <p style="padding: 0;">Contact Us</p><p style="font-size: 16px; font-weight: 500;">(For all new inquiries not related to appeals, please click here.)</p></div>
+      </div>
+
+      <div class="form-group col-md-4">
+        <div class="box boxHome" style="line-height: 1; padding: 10px;" routerLink="/status">
+          <p style="padding: 0;">Status</p><p style="font-size: 16px; font-weight: 500;">(If you’ve already submitted a request, you can check its status by clicking here. You will need your ticket number and email address submitted on your request.)</p></div>
+      </div>
+    </div>
+    <div style="height: 31px;"></div>
+  </div>
+</form>

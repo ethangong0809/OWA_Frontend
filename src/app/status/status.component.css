@@ -1,0 +1,7 @@
+th{
+    background: #233e95;
+    color: white;
+}
+th,td {
+    border: 1px solid black;
+  }

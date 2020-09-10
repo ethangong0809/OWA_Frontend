@@ -1,0 +1,612 @@
+<form class="p1" #start>
+  <div class="p2">
+    <span id="heading">
+      FOIA & Member Records Request
+    </span>
+  </div>
+
+  <ng-template #content1 let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Leaving Contact Forms</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>You are being redirected to another website.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark button-close" (click)="c()">Cancel</button>
+      <button type="button" class="btn btn-outline-dark button-yes" (click)="redirect();c();">OK</button>
+    </div>
+  </ng-template>
+
+  <div class="p3">
+    <app-disclaimer></app-disclaimer>
+
+    <div class="form-row" id="head">
+      <div class="form-group col-md-8 col-sm-8" id="headText">
+        <legend><b>Contact Information (Step 1 of 5)</b></legend>
+      </div>
+      <div class="form-group col-md-4 col-sm-4" id="headText">
+        <label class="requiredText">
+          <font color="red">*</font>Required fields
+        </label>
+      </div>
+      <div class="form-group" id="headText">
+        <p id="info" align="justify">This information is needed so the agency knows where to send the response to your
+          FOIA request.
+          If your are seeking member records,please give as much information about the member as you can.
+          This will help us locate their records.
+        </p>
+      </div>
+    </div>
+
+    <p id="info">
+      <b>What category best describes you?<font color="red">*</font></b>
+    </p>
+    <div class="form-row" id="info">
+      <div class="form-group col-md-4 left-space">
+        <input type="radio" id="contactChoice1" ngModel name="contact" class="radio" (click)="noOrgan()" value="Medicaid"
+          required>
+        <p id="radioButtonText">Medicaid Member</p>
+      </div>
+      <div class="form-group col-md-4 left-space">
+        <input type="radio" id="contactChoice2" ngModel name="contact" class="radio" (click)="showHide()" value="records"
+          required>
+        <p id="radioButtonText">Records Company</p>
+      </div>
+      <div class="form-group col-md-4 left-space">
+        <input type="radio" class="radio" (click)="showHide()" id="contactChoice1" ngModel name="contact" value="Provider"
+          required>
+        <p id="radioButtonText">Provider</p>
+      </div>
+    </div>
+
+    <div class="form-row" id="info">
+      <div class="form-group col-md-4 left-space">
+        <input type="radio" class="radio" (click)="showHide()" id="contactChoice1" ngModel name="contact" value="firm"
+          required>
+        <p id="radioButtonText">Law Firm</p>
+      </div>
+
+      <div class="form-group col-md-4 left-space">
+        <div class="other">
+          <input type="radio" class="radio" id="contactChoice2" ngModel name="contact" (click)="noOrgan1()" value="other"
+            required>
+          <p id="radioButtonText">Other</p>
+        </div>
+        <div class="form-group col-md-8 otherText" *ngIf="showArea1">
+          <textarea class="otherTextarea" ngModel name="text" required></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row" *ngIf="showOptions" id="orgRequest">
+      <div class="form-group col-md-7 col-lg-6 col-xl-5" id="orgRequestText">
+        <label>Is your request on behalf of an organization?<font color="red">*</font></label>
+      </div>
+      <div class="form-group col-md-2 left-space">
+        <input type="radio" (click)="showYes('Organization')" id="contactChoice2" ngModel name="contact1" class="radio"
+          value="Organization" required>
+        <p id="radioButtonText">Yes</p>
+      </div>
+      <div class="form-group col-md-2 left-space">
+        <input type="radio" id="contactChoice2" name="contact1" class="radio" (click)="showNo('Individual')" value="Individual"
+          required>
+        <p id="radioButtonText">No</p>
+      </div>
+    </div>
+
+    <form enctype="multipart/form-data" #editFoia="ngForm">
+      <div class="two">
+        <div class="formBox bottom-space">
+          <h4 id="requestorInfo">Requestor's Information</h4>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Requestor's First Name<font color="red">*</font></label>
+              <input class="form-control" #nameUser="ngModel" autocomplete="off" type="text" placeholder="Requestor's First Name"
+                (keypress)="omit_special_char($event,$event.target.value)" ngModel name="usrnm" required>
+              <div *ngIf="nameUser.touched" style="color:red">
+                <div *ngIf="nameUser.errors?.required">
+                  First Name is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Requestor's Last Name<font color="red">*</font></label>
+              <input class="form-control" type="text" autocomplete="off" #nameUser1="ngModel" placeholder="Requestor's Last Name"
+                (keypress)="omit_special_char($event,$event.target.value)" ngModel name="lname" required>
+              <div *ngIf="nameUser1.touched" style="color:red">
+                <div *ngIf="nameUser1.errors?.required">
+                  Last Name is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6 col-lg-4">
+              <label>Requestor's Phone<font color="red">*</font></label>
+              <input class="form-control" type="text" [textMask]="{mask:mask}" #contactUser="ngModel" autocomplete="off"
+                OnlyNumber="true" pattern="^(\+\d{1})?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$" ngModel name="phone" required
+                (change)="getNumber($event.target.value)" minlength="16" placeholder="Requestor's Phone">
+              <div *ngIf="contactUser.touched" style="color:red">
+                <div *ngIf="contactUser.errors?.required">
+                  Phone is required
+                </div>
+              </div>
+              <div *ngIf="contactUser.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="contactUser.errors?.pattern">
+                  Please enter 10 digits
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6 col-lg-4">
+              <label>Requestor's Email<font color="red">*</font></label>
+              <input class="form-control" type="email" ngModel name="emailUser" id="emailini" #emailUser="ngModel"
+                pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" autocomplete="off" type="email" placeholder="Requestor's Email"
+                required>
+              <div *ngIf="emailUser.touched" style="color:red">
+                <div *ngIf="emailUser.errors?.required">
+                  Email is required
+                </div>
+              </div>
+              <div *ngIf="emailUser.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="emailUser.errors?.pattern">
+                  Email is invalid
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6 col-lg-4">
+              <label>Confirm Requestor's Email<font color="red">*</font></label>
+              <input class="form-control" type="email" id="confemail" (blur)="confirmEmail()" autocomplete="off"
+                #emailUser1="ngModel" ngModel name="emailUser1" placeholder="Requestor's Email" required>
+              <div *ngIf="emailUser1.touched" style="color:red">
+                <div *ngIf="emailUser1.errors?.required">
+                  Email is required
+                </div>
+              </div>
+              <div *ngIf="emailUser.dirty" style="color:red">
+                <div class="help-block" style="color:red;">
+                  {{err}}
+                </div>
+              </div>
+              <div *ngIf="emailUser1.dirty" style="color:red">
+                <div class="help-block" style="color:red;" *ngIf="emailUser1.errors?.pattern">
+                  Email is invalid
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6" id="preferredText">
+              <label>Preferred method of communication</label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="contactChoice1" name="contact" class="radio" value="Phone">
+              <p id="radioButtonText">Phone</p>
+            </div>
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="contactChoice2" name="contact" class="radio" value="Email">
+              <p id="radioButtonText">Email</p>
+            </div>
+            <div class="form-group col-md-3 col-lg-2 left-space">
+              <input type="radio" id="contactChoice2" name="contact" class="radio" value="Phone and Email">
+              <p id="radioButtonText">Both</p>
+            </div>
+          </div>
+
+          <div *ngIf="showMailing">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Mailing address 1<font color="red">*</font></label>
+                <input class="form-control" type="text" placeholder="Requestor's First Name" ngModel name="address1"
+                  required>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>Mailing address 2</label>
+                <input class="form-control" type="text" placeholder="Requestor's Last Name" name="address2">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>City<font color="red">*</font></label>
+                <input class="form-control" type="text" placeholder="City" ngModel name="city" required>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>State<font color="red">*</font></label>
+                <select id="inputState" ngModel name="state" class="form-control" required>
+                  <option [ngValue]="undefined" disabled selected>Choose...</option>
+                  <option value="AL">Alabama</option>
+                  <option value="AK">Alaska</option>
+                  <option value="AZ">Arizona</option>
+                  <option value="AR">Arkansas</option>
+                  <option value="CA">California</option>
+                  <option value="CO">Colorado</option>
+                  <option value="CT">Connecticut</option>
+                  <option value="DE">Delaware</option>
+                  <option value="DC">District Of Columbia</option>
+                  <option value="FL">Florida</option>
+                  <option value="GA">Georgia</option>
+                  <option value="HI">Hawaii</option>
+                  <option value="ID">Idaho</option>
+                  <option value="IL">Illinois</option>
+                  <option value="IN">Indiana</option>
+                  <option value="IA">Iowa</option>
+                  <option value="KS">Kansas</option>
+                  <option value="KY">Kentucky</option>
+                  <option value="LA">Louisiana</option>
+                  <option value="ME">Maine</option>
+                  <option value="MD">Maryland</option>
+                  <option value="MA">Massachusetts</option>
+                  <option value="MI">Michigan</option>
+                  <option value="MN">Minnesota</option>
+                  <option value="MS">Mississippi</option>
+                  <option value="MO">Missouri</option>
+                  <option value="MT">Montana</option>
+                  <option value="NE">Nebraska</option>
+                  <option value="NV">Nevada</option>
+                  <option value="NH">New Hampshire</option>
+                  <option value="NJ">New Jersey</option>
+                  <option value="NM">New Mexico</option>
+                  <option value="NY">New York</option>
+                  <option value="NC">North Carolina</option>
+                  <option value="ND">North Dakota</option>
+                  <option value="OH">Ohio</option>
+                  <option value="OK">Oklahoma</option>
+                  <option value="OR">Oregon</option>
+                  <option value="PA">Pennsylvania</option>
+                  <option value="RI">Rhode Island</option>
+                  <option value="SC">South Carolina</option>
+                  <option value="SD">South Dakota</option>
+                  <option value="TN">Tennessee</option>
+                  <option value="TX">Texas</option>
+                  <option value="UT">Utah</option>
+                  <option value="VT">Vermont</option>
+                  <option value="VA">Virginia</option>
+                  <option value="WA">Washington</option>
+                  <option value="WV">West Virginia</option>
+                  <option value="WI">Wisconsin</option>
+                  <option value="WY">Wyoming</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Zip Code<font color="red">*</font></label>
+                <input class="form-control" type="text" minlength="5" maxlength="5" placeholder="Zip Code" OnlyNumber="true"
+                  ngModel name="zip" required>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="formBox top-space bottom-space" *ngIf="noHide">
+          <div class="form-row">
+            <div class="form-group col-md-6" *ngIf="hideOrgan">
+              <label>Organization Name<font color="red">*</font></label>
+              <input class="form-control" type="text" placeholder="Organization Name" ngModel name="organization"
+                required>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Fax Number</label>
+              <input class="form-control" OnlyNumber="true" type="number" placeholder="Fax Number" name="Fax">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Mailing address 1<font color="red">*</font></label>
+              <input class="form-control" type="text" placeholder="Mailing address 1" ngModel name="mail1" required>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Mailing address 2</label>
+              <input class="form-control" type="text" placeholder="Mailing address 2" name="mail2">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>City<font color="red">*</font></label>
+              <input class="form-control" type="text" placeholder="City" ngModel name="city" required>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>State<font color="red">*</font></label>
+              <select id="inputState" ngModel name="state" class="form-control" required>
+                <option [ngValue]="undefined" disabled selected>Choose...</option>
+                <option value="AL">Alabama</option>
+                <option value="AK">Alaska</option>
+                <option value="AZ">Arizona</option>
+                <option value="AR">Arkansas</option>
+                <option value="CA">California</option>
+                <option value="CO">Colorado</option>
+                <option value="CT">Connecticut</option>
+                <option value="DE">Delaware</option>
+                <option value="DC">District Of Columbia</option>
+                <option value="FL">Florida</option>
+                <option value="GA">Georgia</option>
+                <option value="HI">Hawaii</option>
+                <option value="ID">Idaho</option>
+                <option value="IL">Illinois</option>
+                <option value="IN">Indiana</option>
+                <option value="IA">Iowa</option>
+                <option value="KS">Kansas</option>
+                <option value="KY">Kentucky</option>
+                <option value="LA">Louisiana</option>
+                <option value="ME">Maine</option>
+                <option value="MD">Maryland</option>
+                <option value="MA">Massachusetts</option>
+                <option value="MI">Michigan</option>
+                <option value="MN">Minnesota</option>
+                <option value="MS">Mississippi</option>
+                <option value="MO">Missouri</option>
+                <option value="MT">Montana</option>
+                <option value="NE">Nebraska</option>
+                <option value="NV">Nevada</option>
+                <option value="NH">New Hampshire</option>
+                <option value="NJ">New Jersey</option>
+                <option value="NM">New Mexico</option>
+                <option value="NY">New York</option>
+                <option value="NC">North Carolina</option>
+                <option value="ND">North Dakota</option>
+                <option value="OH">Ohio</option>
+                <option value="OK">Oklahoma</option>
+                <option value="OR">Oregon</option>
+                <option value="PA">Pennsylvania</option>
+                <option value="RI">Rhode Island</option>
+                <option value="SC">South Carolina</option>
+                <option value="SD">South Dakota</option>
+                <option value="TN">Tennessee</option>
+                <option value="TX">Texas</option>
+                <option value="UT">Utah</option>
+                <option value="VT">Vermont</option>
+                <option value="VA">Virginia</option>
+                <option value="WA">Washington</option>
+                <option value="WV">West Virginia</option>
+                <option value="WI">Wisconsin</option>
+                <option value="WY">Wyoming</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Zip Code<font color="red">*</font></label>
+              <input class="form-control" maxlength="5" minlength="5" OnlyNumber="true" type="text" placeholder="Zip Code"
+                ngModel name="zip" required>
+            </div>
+          </div>
+        </div>
+
+        <div id="info">
+          <p><b>Please indicate the nature of your request<font color="red">*</font></b>
+          </p>
+          <div class="form-row">
+            <div class="form-group col-md-12 left-space">
+              <input type="radio" (click)="showRequest()" id="contactChoice1" ngModel name="cont4" class="radio"
+                value="Medicaid" required>
+              <p id="radioButtonText">General FOIA request</p>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-12 left-space">
+              <input type="radio" id="contactChoice2" ngModel name="cont1" class="radio" (click)="showTab1()" value="Medicaid"
+                required>
+              <p id="radioButtonText">I am requesting my own medicaid member records</p>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-12 left-space">
+              <input type="radio" id="contactChoice3" ngModel name="cont6" class="radio" (click)="showTab2()" value="Medicaid"
+                required>
+              <p id="radioButtonText">I am requesting someone else's medicaid member records</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="formBox" *ngIf="showTwo">
+          <div class="form-row" *ngIf="showThree">
+            <div class="form-group col-md-6">
+              <label>Medicaid Member First Name</label>
+              <input class="form-control" type="text" placeholder="Medicaid Member First Name" name="medusrnm">
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Medicaid Member First Name</label>
+              <input class="form-control" type="text" placeholder="Medicaid Member Last Name" name="lmedname">
+            </div>
+          </div>
+
+          <div class="form-row" *ngIf="showInitial">
+            <div class="form-group">
+              <div id="medicaidTextbox">
+                <h6 class="textBanner" align="justify">
+                  <i class="fa fa-info-circle" id="infoIcon" aria-hidden="true"></i>
+                  <b>If you do not know the Medicaid Member Number, the Social Security Number
+                    can help us locate records. If you have entered a correct Medicaid Member Number, there is no
+                    need to enter the Social Security Number.
+                  </b>
+                </h6>
+              </div>
+            </div>
+
+            <div class="form-group col-md-5">
+              <label>Please enter the member's Medicaid ID Number</label>
+              <input class="form-control" type="text" maxlength="12" placeholder="Please enter here" name="number">
+            </div>
+
+            <div class="form-group col-md-2" align="center">
+              <label>(OR)</label>
+            </div>
+
+            <div class="form-group col-md-5">
+              <label>Please enter the member's Social Security Number</label>
+              <input class="form-control" OnlyNumber="true" type="text" placeholder="Please enter here" name="number">
+            </div>
+          </div>
+
+          <div class="form-row" *ngIf="showInitial">
+            <div class="form-group col-md-5">
+              <label> Please enter the Medicaid member's date of birth</label>
+              <my-date-picker name="date" placeholder="mm/dd/yyyy" [options]="myDatePickerOptions"></my-date-picker>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="form-row" id="head">
+          <div class="form-group" id="headText">
+            <legend><b>Your Request (Step 2 of 5)</b></legend>
+          </div>
+          <div class="form-group" id="headText">
+            <p id="info" align="justify">The description of the records you are requesting is important.The scope of
+              your request
+              can impact how quickly the agency can respond to your request .Your description should be as clear and
+              specific as possible and must give agency FOIA personnel enough detail so that they are able to
+              responsably determine exactly which records are being requested and where to locate them.
+            </p>
+          </div>
+        </div>
+
+        <div class="formBox">
+          <div class="form-row" id="description">
+            <label for="number">Clearly describe the information you'd like to receive. Please be as specific as
+              possible<font color="red">*</font></label>
+            <textarea cols="156" rows="7" id="summernote" ngModel name="purpose" [ngxSummernote]="config" required></textarea>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="form-row" id="head">
+          <div class="form-group" id="headText">
+            <legend><b>Additional Information (Step 3 of 5)</b></legend>
+          </div>
+          <div class="form-group" id="headText">
+            <p id="info" align="justify">If you are seeking records about yourself you can upload
+              <a href="#">Certification of Identity form</a>
+              along with a legible copy of your proof of identity. Proof of identity can be a legible copy of your
+              current driver’s license, Medicaid card, or government issued identification card.
+              If you are seeking records of an enrollee or provider, additional documentation is required. You can
+              upload <a href="#">DMAS General Consent for Release form</a>. Please also use this tool if there are
+              additional documents that support your request such as power of attorney authorizations, court orders,
+              custody agreements etc.
+            </p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <div id="medicaidTextbox">
+              <h6 class="textBanner" align="justify">
+                <i class="fa fa-info-circle" id="infoIcon" aria-hidden="true"></i>
+                <b>If you prefer to mail or fax your documentation,
+                  you may address it to the FOIA Coordinator at 600 East Broad Street, Suite 1300, Richmond, VA 23219
+                  or by
+                  fax to <a href="tel:8043714981">804-371-4981</a>
+                </b>
+              </h6>
+            </div>
+          </div>
+        </div>
+
+        <div class="fileBox col-sm-12 bottom-space">
+          <input type="file" name="fileupload" value="fileupload" accept=".pdf,.doc,.docx" style="width: 100%;">
+          <!-- <i class="fa fa-trash" style="font-size: 20px;margin-left: -77px;color:#233e95" aria-hidden="true"></i> -->
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-6" id="fileList">
+            <table border="1">
+              <tr>
+                <th>File Name</th>
+                <th>Action</th>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="form-row" id="head">
+          <div class="form-group" id="headText">
+            <legend><b>Fees (Step 4 of 5)</b></legend>
+          </div>
+          <div class="form-group" id="headText">
+            <p id="info" align="justify">Medicaid recipients are not charged for copies of their own claims history
+              records. Other requesting
+              individuals (such as, but not limited to, attorneys) will be asked to pay for the records requested from
+              the Department of Medical Assistance Services. FOIA allows DMAS to charge for the actual costs of
+              responding to FOIA requests. This includes items such as staff time spent searching for the requested
+              records, copying costs, or any other costs directly related to supplying the requested records.
+              You may request that DMAS provide a cost estimate prior to supplying the records requested. This will
+              allow you the opportunity to modify your request in an attempt to lower the estimated costs if necessary.
+              If it is estimated that it will cost more than $200 to respond to your request, you will be notified in
+              writing. You must agree to pay the actual charges. Effective 7/1/08, it is required you to pay a deposit,
+              not to exceed the amount of the estimate, before DMAS will proceed with your request. The five days that
+              we have to respond to Commonwealth citizens' requests does not include the time between being asked for a
+              deposit and your response.
+              If you owe DMAS money from a previous FOIA request that has remained unpaid for more than 30 days, the
+              Department of Medical Assistance Services requires payment of the past-due bill before it will respond to
+              your new FOIA request.
+              DMAS only has the ability to receive payment through (personal, business, cashier’s or certified) checks
+              or Money Order made payable to DMAS, Attn: FOIA Coordinator. We cannot take online payments or credit
+              cards at this time.
+            </p>
+          </div>
+          <div class="form-group col-sm-12 agreeBox" id="headText">
+            <input type="checkbox" ngModel name="check1" class="checkbox" style="margin-top:7px" required>
+            <span name="agree" class="agree" style="margin-left: 3px"><b>I agree to the above terms
+                <font color="red">*</font></b>
+            </span>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="form-row" id="head">
+          <div class="form-group" id="headText">
+            <legend><b>Review and Submit (Step 5 of 5)</b></legend>
+          </div>
+          <div class="form-group" id="headText">
+            <p id="info" align="justify">Please review the information you entered above before submitting to DMAS.
+              Once you submit, DMAS will
+              contact you regarding any potential fees and/or to discuss your request with you to ensure that we
+              understand what records you are seeking.
+            </p>
+          </div>
+          <div class="form-group col-sm-12 agreeBox" id="headText">
+            <input type="checkbox" ngModel name="check" class="checkbox" style="margin-top:7px" required>
+            <span name="agree" class="agree" style="margin-left: 3px"><b>I agree to the above terms<font color="red">*</font></b>
+            </span>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <hr>
+
+    <p align="right">
+      <button type="submit" class="btn submitButton" [disabled]="!editFoia.valid">Submit</button>
+    </p>
+  </div>
+</form>
+
+<!-- Scroll -->
+<!-- <button class="scrollButton" id="showScrollButtonMobile" *ngIf=showButton (click)="moveUp()">Top</button>  -->
+<button class="scrollButton" id="showScrollButtonDesktop" *ngIf=showButton (click)="scrollTo(start)">Top</button>
